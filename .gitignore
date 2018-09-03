@@ -1,0 +1,13 @@
+# Editor backups
+*~
+.*swp
+*.backup
+
+# Local IntelliJ IDEA files
+**/.idea/kotlinc.xml
+**/.idea/tasks.xml
+**/.idea/vcs.xml
+**/.idea/workspace.xml
+
+# Build results
+**/build/
