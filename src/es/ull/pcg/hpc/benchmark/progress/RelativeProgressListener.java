@@ -3,7 +3,7 @@ package es.ull.pcg.hpc.benchmark.progress;
 import es.ull.pcg.hpc.benchmark.ProgressListener;
 
 /**
- * Base class that allows obtaining relative progress (i.e. percentage of the current progress) in real time.
+ * Template class that allows obtaining relative progress (i.e. percentage of the current progress) in real time.
  */
 public abstract class RelativeProgressListener implements ProgressListener {
     protected String mBenchmarkName;

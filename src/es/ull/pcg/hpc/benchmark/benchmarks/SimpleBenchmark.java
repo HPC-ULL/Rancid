@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * A parameterized single benchmark. When executed, it repeatedly runs its {@link #benchmark()} method for each set of
- * parameters specified, according to its stop condition.
+ * A parameterized single benchmark template. When executed, it repeatedly runs its {@link #benchmark()} method for each
+ * set of parameters specified, according to its stop condition.
  */
 public abstract class SimpleBenchmark extends GenericBenchmark {
     private final List<Parameters> mParameters;
@@ -143,6 +143,9 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
         mParameters.add(parameters);
     }
 
+    /**
+     * Implementation of the benchmark. This is the measured method.
+     */
     protected abstract void benchmark ();
 
 }

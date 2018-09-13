@@ -57,8 +57,17 @@ public interface ProgressiveResultsLogger {
      */
     void exitList ();
 
+    /**
+     * Start logging results of the type {@link ValueResult}.
+     *
+     * @param title Name of the partial result value.
+     * @param type Type or category of the result.
+     */
     void enterValue (String title, String type);
 
+    /**
+     * End logging of a partial result value.
+     */
     void exitValue ();
 
     /**
