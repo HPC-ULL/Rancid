@@ -10,7 +10,7 @@ import es.ull.pcg.hpc.benchmark.utils.MathUtils;
 /**
  * Benchmark results analyzer that sums the values of a given metric found in the results.
  */
-public class SumAnalyzer extends MetricReduceAnalyzer implements ResultsAnalyzer {
+public class SumAnalyzer extends MetricReduceAnalyzer {
     public static final String NAME = "Total";
 
     /**

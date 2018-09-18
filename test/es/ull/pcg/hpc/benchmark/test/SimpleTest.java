@@ -13,6 +13,7 @@ import es.ull.pcg.hpc.benchmark.printers.PrintWriterOutputPrinter;
 import es.ull.pcg.hpc.benchmark.stopconditions.AndStopCondition;
 import es.ull.pcg.hpc.benchmark.stopconditions.ErrorStopCondition;
 import es.ull.pcg.hpc.benchmark.stopconditions.FixedIterationsStopCondition;
+import es.ull.pcg.hpc.benchmark.stopconditions.OrStopCondition;
 import org.junit.Test;
 
 import java.io.PrintWriter;
@@ -30,8 +31,8 @@ public class SimpleTest {
         @Override
         public void preBenchmark (Parameters parameters) {
             super.preBenchmark(parameters);
-            w = parameters.getParameter("Width");
-            h = parameters.getParameter("Height");
+            this.w = parameters.getParameter("Width");
+            this.h = parameters.getParameter("Height");
         }
 
         @Override
@@ -49,8 +50,8 @@ public class SimpleTest {
     private SimpleBenchmark fwdBenchmark = new MyBenchmark("Forward Implementation") {
         @Override
         protected void benchmark () {
-            //if (Math.random() < 0.25)
-            //    throw new RuntimeException("Whaat");
+            if (Math.random() < 0.25)
+                throw new RuntimeException("Oh no.");
 
             for (int i = 0; i < w; ++i)
                 for (int j = 0; j < h; ++j)
@@ -61,9 +62,6 @@ public class SimpleTest {
     private SimpleBenchmark revBenchmark = new MyBenchmark("Reverse Implementation") {
         @Override
         protected void benchmark () {
-            //if (Math.random() > 0.25)
-            //    throw new RuntimeException("Whaat");
-
             for (int i = w - 1; i >= 0; --i)
                 for (int j = h - 1; j >= 0; --j)
                     n += ((i + 1) * (j + 1)) / (double) (w * h);
@@ -84,9 +82,11 @@ public class SimpleTest {
 
         final int warmup = 10;
 
-        AndStopCondition stopCondition = new AndStopCondition(
+        AndStopCondition andCondition = new AndStopCondition(
             new FixedIterationsStopCondition(20 + warmup),
-            new ErrorStopCondition(ExecutionTimeMeter.NAME, warmup, 0.25));
+            new ErrorStopCondition(ExecutionTimeMeter.NAME, warmup, 0.1));
+
+        OrStopCondition stopCondition = new OrStopCondition(andCondition, new FixedIterationsStopCondition(100));
 
         MultipleBenchmark myBenchmark = new MultipleBenchmark("Loop Benchmark", stopCondition);
         myBenchmark.addImplementations(fwdBenchmark);

@@ -10,7 +10,7 @@ import es.ull.pcg.hpc.benchmark.utils.MathUtils;
 /**
  * Benchmark results analyzer that calculates the arithmetic average of a given metric found in the results.
  */
-public class AverageAnalyzer extends MetricReduceAnalyzer implements ResultsAnalyzer {
+public class AverageAnalyzer extends MetricReduceAnalyzer {
     public static final String NAME = "Average";
 
     /**
