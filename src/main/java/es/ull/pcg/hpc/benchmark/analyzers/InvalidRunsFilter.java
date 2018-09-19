@@ -43,7 +43,9 @@ public class InvalidRunsFilter extends ResultsProcessor implements ResultsAnalyz
 
         // Apply filter to all metrics and remove successful runs
         if (mInvalid != null) {
-            map.forEach((k, v) -> process(v));
+            for (Results value: map.values())
+                process(value);
+
             map.remove(SuccessfulRunsMeter.NAME);
         }
     }
@@ -64,10 +66,13 @@ public class InvalidRunsFilter extends ResultsProcessor implements ResultsAnalyz
         }
         else {
             if (list.getType().equals(ResultTypes.Metric.toString()) &&
-                list.getTitle().equals(SuccessfulRunsMeter.NAME))
+                list.getTitle().equals(SuccessfulRunsMeter.NAME)) {
                 mInvalid = list;
-            else
-                list.forEach(this::process);
+            }
+            else {
+                for (Results result: list)
+                    process(result);
+            }
         }
     }
 

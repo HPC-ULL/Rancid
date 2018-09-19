@@ -36,13 +36,16 @@ public class MetricFilter extends ResultsProcessor implements ResultsAnalyzer {
 
     @Override
     public void processMap (MapResult map) {
-        map.forEach((k, v) -> process(v));
+        for (Results result: map.values())
+            process(result);
+
         map.remove(mMetricName);
     }
 
     @Override
     public void processList (ListResult list) {
-        list.forEach(this::process);
+        for (Results result: list)
+            process(result);
     }
 
     @Override

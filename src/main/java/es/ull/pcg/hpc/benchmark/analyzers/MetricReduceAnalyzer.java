@@ -41,7 +41,10 @@ public abstract class MetricReduceAnalyzer extends ResultsProcessor implements R
         MapResult prevCached = mCachedValues;
 
         mCachedValues = MapResult.createTemp();
-        map.forEach((k, v) -> process(v));
+
+        for (Results result: map.values())
+            process(result);
+
         map.putAll(mCachedValues);
 
         mCachedValues.clear();
@@ -50,10 +53,13 @@ public abstract class MetricReduceAnalyzer extends ResultsProcessor implements R
 
     @Override
     public void processList (ListResult list) {
-        if (ResultTypes.Metric.toString().equals(list.getType()) && list.getTitle().equals(mMetricName))
+        if (ResultTypes.Metric.toString().equals(list.getType()) && list.getTitle().equals(mMetricName)) {
             mCachedValues.put(getName(), reduceMetric(list));
-        else
-            list.forEach(this::process);
+        }
+        else {
+            for (Results result: list)
+                process(result);
+        }
     }
 
     @Override

@@ -37,15 +37,19 @@ public class WarmupIterationsFilter extends ResultsProcessor implements ResultsA
 
     @Override
     public void processMap (MapResult map) {
-        map.forEach((k, v) -> process(v));
+        for (Results result: map.values())
+            process(result);
     }
 
     @Override
     public void processList (ListResult list) {
-        if (ResultTypes.Metric.toString().equals(list.getType()))
+        if (ResultTypes.Metric.toString().equals(list.getType())) {
             list.subList(0, mWarmup).clear();
-        else
-            list.forEach(this::process);
+        }
+        else {
+            for (Results result: list)
+                process(result);
+        }
     }
 
     @Override

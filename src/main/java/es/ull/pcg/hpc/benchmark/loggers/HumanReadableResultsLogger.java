@@ -5,7 +5,6 @@ import es.ull.pcg.hpc.benchmark.results.ResultTypes;
 import es.ull.pcg.hpc.benchmark.results.ListResult;
 import es.ull.pcg.hpc.benchmark.results.MapResult;
 import es.ull.pcg.hpc.benchmark.results.ValueResult;
-import es.ull.pcg.hpc.benchmark.utils.IterUtils;
 
 /**
  * Results logger intended to provide human-readable output.
@@ -32,7 +31,10 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
     @Override
     public void processMap (MapResult map) {
         enterMap(map.getTitle(), map.getType());
-        map.values().forEach(this::log);
+
+        for (Results value: map.values())
+            log(value);
+
         exitMap();
     }
 
@@ -40,10 +42,13 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
     public void processList (ListResult list) {
         enterList(list.getTitle(), list.getType());
 
-        if (list.get(0) instanceof ValueResult)
+        if (list.get(0) instanceof ValueResult) {
             logValues(list);
-        else
-            list.forEach(this::log);
+        }
+        else {
+            for (Results value: list)
+                log(value);
+        }
 
         exitList();
     }
@@ -114,8 +119,10 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
         final int size = values.size();
 
         writeIndentation();
-        IterUtils.enumerate(values, (i, result) -> {
-            mOut.print(values.get(i));
+
+        int i = 0;
+        for (Results result: values) {
+            mOut.print(result);
             if (i < size - 1) {
                 mOut.print(", ");
 
@@ -124,7 +131,8 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
                     writeIndentation();
                 }
             }
-        });
+            ++i;
+        }
 
         mOut.println();
     }

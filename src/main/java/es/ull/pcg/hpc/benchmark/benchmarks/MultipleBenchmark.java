@@ -6,7 +6,6 @@ import es.ull.pcg.hpc.benchmark.results.ResultTypes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A benchmark in which multiple implementations of the same algorithm are compared.
@@ -37,17 +36,21 @@ public class MultipleBenchmark extends GenericBenchmark {
     @Override
     public Results benchmark (List<Meter> meters, List<ProgressListener> progress, List<ResultsAnalyzer> analyzers,
                               List<ProgressiveResultsLogger> loggers) {
-        mImplementations.forEach(implem -> implem.setStopCondition(mStop));
+        for (SimpleBenchmark impl: mImplementations)
+            impl.setStopCondition(mStop);
 
-        List<String> implementationNames = mImplementations.stream().map(Benchmark::getName)
-                                                           .collect(Collectors.toList());
+        ArrayList<String> implementationNames = new ArrayList<>(mImplementations.size());
+        for (Benchmark bench: mImplementations)
+            implementationNames.add(bench.getName());
 
         MapResult results = new MapResult(this.getName(), ResultTypes.MultiBenchmark.toString(), implementationNames);
 
-        mImplementations.forEach(impl -> {
-            meters.forEach(Meter::reset);
+        for (SimpleBenchmark impl: mImplementations) {
+            for (Meter meter: meters)
+                meter.reset();
+
             results.put(impl.getName(), impl.benchmark(meters, progress, analyzers, loggers));
-        });
+        }
 
         return results;
     }
@@ -59,7 +62,8 @@ public class MultipleBenchmark extends GenericBenchmark {
 
     @Override
     public void reset () {
-        mImplementations.forEach(SimpleBenchmark::reset);
+        for (Benchmark impl: mImplementations)
+            impl.reset();
     }
 
     /**

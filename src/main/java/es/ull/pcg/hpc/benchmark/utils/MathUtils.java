@@ -1,5 +1,6 @@
 package es.ull.pcg.hpc.benchmark.utils;
 
+import es.ull.pcg.hpc.benchmark.Results;
 import es.ull.pcg.hpc.benchmark.results.ListResult;
 import es.ull.pcg.hpc.benchmark.results.ValueResult;
 
@@ -14,8 +15,15 @@ public class MathUtils {
      * @return The minimum value.
      */
     public static double min (ListResult result) {
-        return result.stream().map(results -> ((ValueResult) results).doubleValue())
-                     .reduce(Double.MAX_VALUE, Math::min);
+        double value = Double.MAX_VALUE;
+
+        for (Results res: result) {
+            double resultValue = ((ValueResult) res).doubleValue();
+            if (resultValue < value)
+                value = resultValue;
+        }
+
+        return value;
     }
 
     /**
@@ -25,8 +33,15 @@ public class MathUtils {
      * @return The maximum value.
      */
     public static double max (ListResult result) {
-        return result.stream().map(results -> ((ValueResult) results).doubleValue())
-                     .reduce(Double.MIN_VALUE, Math::max);
+        double value = Double.MIN_VALUE;
+
+        for (Results res: result) {
+            double resultValue = ((ValueResult) res).doubleValue();
+            if (resultValue > value)
+                value = resultValue;
+        }
+
+        return value;
     }
 
     /**
@@ -36,9 +51,12 @@ public class MathUtils {
      * @return The sum of all values.
      */
     public static double sum (ListResult result) {
-        return result.stream()
-                     .map(results -> ((ValueResult) results).doubleValue())
-                     .reduce(0.0, (x, y) -> x + y);
+        double value = 0.0;
+
+        for (Results res: result)
+            value += ((ValueResult) res).doubleValue();
+
+        return value;
     }
 
     /**
@@ -77,13 +95,14 @@ public class MathUtils {
      */
     public static double sampleVariance (double avg, ListResult result) {
         final int n = result.size();
+        double value = 0.0;
 
-        if (n <= 1)
-            return 0.0;
+        if (n > 1) {
+            for (Results res: result)
+                value += Math.pow(((ValueResult) res).doubleValue() - avg, 2);
+        }
 
-        return result.stream()
-                     .map(results -> Math.pow(((ValueResult) results).doubleValue() - avg, 2))
-                     .reduce(0.0, (x, y) -> x + y) / (n - 1);
+        return value / (n - 1);
     }
 
     /**

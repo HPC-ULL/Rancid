@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * A parameterized single benchmark template. When executed, it repeatedly runs its {@link #benchmark()} method for each
@@ -42,23 +41,35 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
     @Override
     public Results benchmark (List<Meter> meters, List<ProgressListener> progress, List<ResultsAnalyzer> analyzers,
                               List<ProgressiveResultsLogger> loggers) {
-        List<String> meterNames = meters.stream().map(Meter::getName).collect(Collectors.toList());
-        List<String> paramNames = mParameters.stream().map(Parameters::getTitle).collect(Collectors.toList());
+        ArrayList<String> meterNames = new ArrayList<>(meters.size());
+
+        for (Meter meter: meters)
+            meterNames.add(meter.getName());
+
+        ArrayList<String> paramNames = new ArrayList<>(mParameters.size());
+
+        for (Parameters param: mParameters)
+            paramNames.add(param.getTitle());
 
         MapResult results = new MapResult(this.getName(), ResultTypes.Benchmark.toString(), paramNames);
 
-        progress.forEach(p -> p.startBenchmark(this.getName(), mParameters.size()));
-        loggers.forEach(logger -> logger.enterMap(this.getName(), ResultTypes.Benchmark.toString()));
+        for (ProgressListener listener: progress)
+            listener.startBenchmark(this.getName(), mParameters.size());
+
+        for (ProgressiveResultsLogger logger: loggers)
+            logger.enterMap(this.getName(), ResultTypes.Benchmark.toString());
 
         for (Parameters parameters: mParameters) {
-            progress.forEach(p -> p.startParameters(parameters.getTitle()));
-            loggers.forEach(logger -> logger.enterMap(parameters.getTitle(), ResultTypes.ParameterSet.toString()));
+            for (ProgressListener listener: progress)
+                listener.startParameters(parameters.getTitle());
+
+            for (ProgressiveResultsLogger logger: loggers)
+                logger.enterMap(parameters.getTitle(), ResultTypes.ParameterSet.toString());
 
             MapResult paramResults = new MapResult(parameters.getTitle(), ResultTypes.ParameterSet.toString(),
                                                    meterNames);
-            meters.forEach(meter -> paramResults.put(meter.getName(),
-                                                     new ListResult(meter.getName(),
-                                                                    ResultTypes.Metric.toString())));
+            for (Meter meter: meters)
+                paramResults.put(meter.getName(), new ListResult(meter.getName(), ResultTypes.Metric.toString()));
 
             preBenchmark(parameters);
 
@@ -68,7 +79,8 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
 
                 try {
                     // Start measuring
-                    meters.forEach(Meter::start);
+                    for (Meter meter: meters)
+                        meter.start();
 
                     benchmark();
 
@@ -87,36 +99,42 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
                         break;
                 }
 
-                meters.forEach(meter -> ((ListResult) paramResults.get(meter.getName())).add(meter.getMeasure()));
+                for (Meter meter: meters)
+                    ((ListResult) paramResults.get(meter.getName())).add(meter.getMeasure());
 
                 postRun();
                 mStop.update(paramResults);
             }
 
             // Online analysis of results
-            analyzers.forEach(analyzer -> analyzer.analyze(paramResults));
+            for (ResultsAnalyzer analyzer: analyzers)
+                analyzer.analyze(paramResults);
 
             // Logging of results for the current set of parameters
             for (Map.Entry<String, Results> entry: paramResults.entrySet()) {
                 Results result = entry.getValue();
 
                 if (result instanceof ListResult) {
-                    loggers.forEach(logger -> {
+                    for (ProgressiveResultsLogger logger: loggers) {
                         logger.enterList(result.getTitle(), result.getType());
                         logger.logValues((ListResult) result);
                         logger.exitList();
-                    });
+                    }
                 }
                 else {
-                    loggers.forEach(logger -> {
+                    for (ProgressiveResultsLogger logger: loggers) {
                         logger.enterValue(result.getTitle(), result.getType());
                         logger.logValue((ValueResult) result);
                         logger.exitValue();
-                    });
+                    }
                 }
             }
-            progress.forEach(ProgressListener::finishParameters);
-            loggers.forEach(ProgressiveResultsLogger::exitMap);
+
+            for (ProgressListener listener: progress)
+                listener.finishParameters();
+
+            for (ProgressiveResultsLogger logger: loggers)
+                logger.exitMap();
 
             // Update global results
             results.put(parameters.getTitle(), paramResults);
@@ -124,8 +142,11 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
 
         }
 
-        progress.forEach(ProgressListener::finishBenchmark);
-        loggers.forEach(ProgressiveResultsLogger::exitMap);
+        for (ProgressListener listener: progress)
+            listener.finishBenchmark();
+
+        for (ProgressiveResultsLogger logger: loggers)
+            logger.exitMap();
 
         return results;
     }

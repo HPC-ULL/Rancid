@@ -5,7 +5,6 @@ import es.ull.pcg.hpc.benchmark.Results;
 import es.ull.pcg.hpc.benchmark.results.ListResult;
 import es.ull.pcg.hpc.benchmark.results.MapResult;
 import es.ull.pcg.hpc.benchmark.results.ValueResult;
-import es.ull.pcg.hpc.benchmark.utils.IterUtils;
 
 /**
  * Results logger that outputs in XML format.
@@ -40,7 +39,7 @@ public class XmlResultsLogger extends IndentedResultsLogger {
 
         indent();
 
-        IterUtils.enumerate(map.values(), (i, result) -> {
+        for (Results result: map.values()) {
             if (result instanceof ValueResult) {
                 writeIndentation();
                 mOut.println("<node type=\"" + result.getType() + "\">");
@@ -64,7 +63,7 @@ public class XmlResultsLogger extends IndentedResultsLogger {
             }
 
             mOut.println();
-        });
+        }
 
         unindent();
 
@@ -91,18 +90,18 @@ public class XmlResultsLogger extends IndentedResultsLogger {
 
         indent();
 
-        IterUtils.enumerate(list, (i, result) -> {
+        for (Results result: list) {
             writeIndentation();
             mOut.print("<value>");
 
             indent();
 
-            process(list.get(i));
+            process(result);
 
             unindent();
 
             mOut.println("</value>");
-        });
+        }
 
         unindent();
 

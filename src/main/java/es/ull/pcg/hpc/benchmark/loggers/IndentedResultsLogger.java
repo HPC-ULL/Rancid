@@ -4,8 +4,6 @@ import es.ull.pcg.hpc.benchmark.OutputPrinter;
 import es.ull.pcg.hpc.benchmark.ResultsLogger;
 import es.ull.pcg.hpc.benchmark.ResultsProcessor;
 
-import java.util.stream.IntStream;
-
 /**
  * Template for results loggers that write results hierarchically using indentation.
  */
@@ -49,6 +47,7 @@ public abstract class IndentedResultsLogger extends ResultsProcessor implements 
      * Write the current level of indentation in the output.
      */
     protected void writeIndentation () {
-        IntStream.range(0, mIndentLevel).forEach(i -> mOut.print("    "));
+        for (int i = 0; i < mIndentLevel; ++i)
+            mOut.print("    ");
     }
 }

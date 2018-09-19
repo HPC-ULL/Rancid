@@ -52,24 +52,40 @@ public class BenchmarkManager {
     public void runBenchmarks () {
         mResults.clear();
 
-        int totalBenchmarks = mBenchmarks.stream().map(Benchmark::getNumImplementations).reduce(0, Integer::sum);
-        mProgressListeners.forEach(progress -> progress.start(totalBenchmarks));
+        int totalBenchmarks = 0;
+        for (Benchmark bench: mBenchmarks)
+            totalBenchmarks += bench.getNumImplementations();
+
+        int finalTotalBenchmarks = totalBenchmarks;
+
+        for (ProgressListener listener: mProgressListeners)
+            listener.start(finalTotalBenchmarks);
 
         for (Benchmark benchmark: mBenchmarks) {
             benchmark.reset();
-            mMeters.forEach(Meter::reset);
 
-            mOnlineLoggers.forEach(logger -> logger.startProgressiveLog(benchmark.getName()));
+            for (Meter meter: mMeters)
+                meter.reset();
+
+            for (ProgressiveResultsLogger logger: mOnlineLoggers)
+                logger.startProgressiveLog(benchmark.getName());
+
             Results results = benchmark.benchmark(mMeters, mProgressListeners, mRunAnalyzers, mOnlineLoggers);
-            mOnlineLoggers.forEach(ProgressiveResultsLogger::endProgressiveLog);
 
-            mGlobalAnalyzers.forEach(analyzer -> analyzer.analyze(results));
-            mGlobalLoggers.forEach(logger -> logger.log(results));
+            for (ProgressiveResultsLogger logger: mOnlineLoggers)
+                logger.endProgressiveLog();
+
+            for (ResultsAnalyzer analyzer: mGlobalAnalyzers)
+                analyzer.analyze(results);
+
+            for (ResultsLogger logger: mGlobalLoggers)
+                logger.log(results);
 
             mResults.add(results);
         }
 
-        mProgressListeners.forEach(ProgressListener::finish);
+        for (ProgressListener listener: mProgressListeners)
+            listener.finish();
     }
 
     /**

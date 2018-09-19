@@ -22,7 +22,9 @@ public class MapResult extends TreeMap<String, Results> implements Results {
     public MapResult (String title, String type, List<String> names) {
         this.mTitle = title;
         this.mType = type;
-        names.forEach(name -> this.put(name, null));
+
+        for (String name: names)
+            put(name, null);
     }
 
     /**

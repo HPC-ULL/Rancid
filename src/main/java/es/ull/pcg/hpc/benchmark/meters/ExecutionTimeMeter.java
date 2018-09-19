@@ -23,7 +23,7 @@ public class ExecutionTimeMeter implements Meter {
 
     @Override
     public void stopError () {
-        mStopTime = System.nanoTime();
+        mStopTime = mStartTime;
     }
 
     @Override

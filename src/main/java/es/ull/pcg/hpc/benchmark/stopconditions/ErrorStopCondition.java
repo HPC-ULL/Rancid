@@ -57,7 +57,8 @@ public class ErrorStopCondition extends ResultsProcessor implements StopConditio
                 process(result);
         }
         else {
-            map.forEach((k, v) -> process(v));
+            for (Results result: map.values())
+                process(result);
         }
     }
 

@@ -5,7 +5,6 @@ import es.ull.pcg.hpc.benchmark.Results;
 import es.ull.pcg.hpc.benchmark.results.ListResult;
 import es.ull.pcg.hpc.benchmark.results.MapResult;
 import es.ull.pcg.hpc.benchmark.results.ValueResult;
-import es.ull.pcg.hpc.benchmark.utils.IterUtils;
 
 import java.util.Collection;
 
@@ -47,14 +46,17 @@ public class JsonResultsLogger extends IndentedResultsLogger {
         Collection<? extends Results> values = map.values();
         final int size = values.size();
 
-        IterUtils.enumerate(values, (i, result) -> {
+        int i = 0;
+        for (Results result: values) {
             process(result);
 
             if (i < size - 1)
                 mOut.println(",");
             else
                 mOut.println();
-        });
+
+            ++i;
+        }
 
         unindent();
 
@@ -84,7 +86,9 @@ public class JsonResultsLogger extends IndentedResultsLogger {
         indent();
 
         final int size = list.size();
-        IterUtils.enumerate(list, (i, result) -> {
+        int i = 0;
+
+        for (Results result: list) {
             if (result instanceof ValueResult) {
                 writeIndentation();
                 mOut.print(result);
@@ -97,7 +101,9 @@ public class JsonResultsLogger extends IndentedResultsLogger {
                 mOut.println(",");
             else
                 mOut.println();
-        });
+
+            ++i;
+        }
 
         unindent();
 
