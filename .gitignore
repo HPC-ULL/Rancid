@@ -4,10 +4,12 @@
 *.backup
 
 # Local IntelliJ IDEA files
-**/.idea/kotlinc.xml
-**/.idea/tasks.xml
-**/.idea/vcs.xml
-**/.idea/workspace.xml
+.idea/vcs.xml
+.idea/workspace.xml
+
+# Local Gradle files
+.gradle/
 
 # Build results
-**/build/
+build/
+out/
