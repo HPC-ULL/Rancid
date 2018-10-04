@@ -28,6 +28,6 @@ public class StdDeviationAnalyzer extends MetricReduceAnalyzer {
 
     @Override
     protected Results reduceMetric (ListResult metric) {
-        return new ValueResult(getName(), ResultTypes.Analysis.toString(), MathUtils.sampleStdDev(metric));
+        return new ValueResult(getName(), ResultTypes.Analysis, MathUtils.sampleStdDev(metric));
     }
 }

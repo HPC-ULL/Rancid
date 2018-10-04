@@ -10,7 +10,8 @@ import java.util.Collection;
  * A benchmark result composed of a list of results.
  */
 public class ListResult extends ArrayList<Results> implements Results {
-    private final String mTitle, mType;
+    private final String mTitle;
+    private final ResultTypes mType;
 
     /**
      * Create a new list result.
@@ -18,7 +19,7 @@ public class ListResult extends ArrayList<Results> implements Results {
      * @param title Descriptive name for the list.
      * @param type Type or category of this result.
      */
-    public ListResult (String title, String type) {
+    public ListResult (String title, ResultTypes type) {
         this.mTitle = title;
         this.mType = type;
     }
@@ -30,7 +31,7 @@ public class ListResult extends ArrayList<Results> implements Results {
      * @param title Descriptive name for the list.
      * @param type Type or category of this result.
      */
-    public ListResult (Collection<Results> elements, String title, String type) {
+    public ListResult (Collection<Results> elements, String title, ResultTypes type) {
         super(elements);
         this.mTitle = title;
         this.mType = type;
@@ -42,7 +43,7 @@ public class ListResult extends ArrayList<Results> implements Results {
     }
 
     @Override
-    public String getType () {
+    public ResultTypes getType () {
         return mType;
     }
 

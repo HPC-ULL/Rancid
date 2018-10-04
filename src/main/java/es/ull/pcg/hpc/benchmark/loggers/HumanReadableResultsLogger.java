@@ -30,7 +30,7 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
 
     @Override
     public void processMap (MapResult map) {
-        enterMap(map.getTitle(), map.getType());
+        enterMap(map.getTitle(), map.getType().toString());
 
         for (Results value: map.values())
             log(value);
@@ -40,7 +40,7 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
 
     @Override
     public void processList (ListResult list) {
-        enterList(list.getTitle(), list.getType());
+        enterList(list.getTitle(), list.getType().toString());
 
         if (list.get(0) instanceof ValueResult) {
             logValues(list);
@@ -55,7 +55,7 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
 
     @Override
     public void processValue (ValueResult value) {
-        enterValue(value.getTitle(), value.getType());
+        enterValue(value.getTitle(), value.getType().toString());
         logValue(value);
         exitValue();
     }

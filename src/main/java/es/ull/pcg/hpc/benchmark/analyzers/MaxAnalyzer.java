@@ -28,6 +28,6 @@ public class MaxAnalyzer extends MetricReduceAnalyzer {
 
     @Override
     protected Results reduceMetric (ListResult metric) {
-        return new ValueResult(getName(), ResultTypes.Analysis.toString(), MathUtils.max(metric));
+        return new ValueResult(getName(), ResultTypes.Analysis, MathUtils.max(metric));
     }
 }

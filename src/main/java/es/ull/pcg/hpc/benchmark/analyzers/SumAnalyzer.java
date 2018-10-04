@@ -29,6 +29,6 @@ public class SumAnalyzer extends MetricReduceAnalyzer {
 
     @Override
     protected Results reduceMetric (ListResult metric) {
-        return new ValueResult(getName(), ResultTypes.Analysis.toString(), MathUtils.sum(metric));
+        return new ValueResult(getName(), ResultTypes.Analysis, MathUtils.sum(metric));
     }
 }

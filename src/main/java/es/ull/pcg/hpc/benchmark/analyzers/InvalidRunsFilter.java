@@ -65,7 +65,7 @@ public class InvalidRunsFilter extends ResultsProcessor implements ResultsAnalyz
             }
         }
         else {
-            if (list.getType().equals(ResultTypes.Metric.toString()) &&
+            if (list.getType() == ResultTypes.Metric &&
                 list.getTitle().equals(SuccessfulRunsMeter.NAME)) {
                 mInvalid = list;
             }

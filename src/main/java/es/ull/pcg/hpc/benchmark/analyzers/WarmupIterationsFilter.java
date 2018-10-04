@@ -43,7 +43,7 @@ public class WarmupIterationsFilter extends ResultsProcessor implements ResultsA
 
     @Override
     public void processList (ListResult list) {
-        if (ResultTypes.Metric.toString().equals(list.getType())) {
+        if (ResultTypes.Metric == list.getType()) {
             list.subList(0, mWarmup).clear();
         }
         else {

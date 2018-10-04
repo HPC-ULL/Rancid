@@ -51,7 +51,7 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
         for (Parameters param: mParameters)
             paramNames.add(param.getTitle());
 
-        MapResult results = new MapResult(this.getName(), ResultTypes.Benchmark.toString(), paramNames);
+        MapResult results = new MapResult(this.getName(), ResultTypes.Benchmark, paramNames);
 
         for (ProgressListener listener: progress)
             listener.startBenchmark(this.getName(), mParameters.size());
@@ -66,10 +66,9 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
             for (ProgressiveResultsLogger logger: loggers)
                 logger.enterMap(parameters.getTitle(), ResultTypes.ParameterSet.toString());
 
-            MapResult paramResults = new MapResult(parameters.getTitle(), ResultTypes.ParameterSet.toString(),
-                                                   meterNames);
+            MapResult paramResults = new MapResult(parameters.getTitle(), ResultTypes.ParameterSet, meterNames);
             for (Meter meter: meters)
-                paramResults.put(meter.getName(), new ListResult(meter.getName(), ResultTypes.Metric.toString()));
+                paramResults.put(meter.getName(), new ListResult(meter.getName(), ResultTypes.Metric));
 
             preBenchmark(parameters);
 
@@ -116,14 +115,14 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
 
                 if (result instanceof ListResult) {
                     for (ProgressiveResultsLogger logger: loggers) {
-                        logger.enterList(result.getTitle(), result.getType());
+                        logger.enterList(result.getTitle(), result.getType().toString());
                         logger.logValues((ListResult) result);
                         logger.exitList();
                     }
                 }
                 else {
                     for (ProgressiveResultsLogger logger: loggers) {
-                        logger.enterValue(result.getTitle(), result.getType());
+                        logger.enterValue(result.getTitle(), result.getType().toString());
                         logger.logValue((ValueResult) result);
                         logger.exitValue();
                     }

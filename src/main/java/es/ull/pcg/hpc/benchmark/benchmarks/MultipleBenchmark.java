@@ -43,7 +43,7 @@ public class MultipleBenchmark extends GenericBenchmark {
         for (Benchmark bench: mImplementations)
             implementationNames.add(bench.getName());
 
-        MapResult results = new MapResult(this.getName(), ResultTypes.MultiBenchmark.toString(), implementationNames);
+        MapResult results = new MapResult(this.getName(), ResultTypes.MultiBenchmark, implementationNames);
 
         for (SimpleBenchmark impl: mImplementations) {
             for (Meter meter: meters)

@@ -10,7 +10,8 @@ import java.util.TreeMap;
  * A benchmark result mapping {@link String} values to other results.
  */
 public class MapResult extends TreeMap<String, Results> implements Results {
-    private final String mTitle, mType;
+    private final String mTitle;
+    private final ResultTypes mType;
 
     /**
      * Create a new map result.
@@ -19,7 +20,7 @@ public class MapResult extends TreeMap<String, Results> implements Results {
      * @param type Type or category of this result.
      * @param names Names of the results stored in the map.
      */
-    public MapResult (String title, String type, List<String> names) {
+    public MapResult (String title, ResultTypes type, List<String> names) {
         this.mTitle = title;
         this.mType = type;
 
@@ -31,7 +32,8 @@ public class MapResult extends TreeMap<String, Results> implements Results {
      * Create an empty map with no title or type.
      */
     private MapResult () {
-        this.mTitle = this.mType = null;
+        this.mTitle = null;
+        this.mType = null;
     }
 
     /**
@@ -49,7 +51,7 @@ public class MapResult extends TreeMap<String, Results> implements Results {
     }
 
     @Override
-    public String getType () {
+    public ResultTypes getType () {
         return mType;
     }
 

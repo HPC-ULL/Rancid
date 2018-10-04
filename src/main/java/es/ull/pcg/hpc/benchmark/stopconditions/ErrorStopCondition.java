@@ -50,7 +50,7 @@ public class ErrorStopCondition extends ResultsProcessor implements StopConditio
 
     @Override
     public void processMap (MapResult map) {
-        if (map.getType().equals(ResultTypes.ParameterSet.toString())) {
+        if (map.getType() == ResultTypes.ParameterSet) {
             Results result = map.get(mMetricName);
 
             if (result != null)
@@ -64,7 +64,7 @@ public class ErrorStopCondition extends ResultsProcessor implements StopConditio
 
     @Override
     public void processList (ListResult list) {
-        if (list.getType().equals(ResultTypes.Metric.toString()) && list.getTitle().equals(mMetricName) &&
+        if (list.getType() == ResultTypes.Metric && list.getTitle().equals(mMetricName) &&
             mWarmup < list.size()) {
             ListResult filtered = new ListResult(list.subList(mWarmup, list.size()), list.getTitle(), list.getType());
 

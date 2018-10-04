@@ -7,7 +7,8 @@ import es.ull.pcg.hpc.benchmark.ResultsProcessor;
  * A numeric benchmark result.
  */
 public class ValueResult extends Number implements Results {
-    private final String mTitle, mType;
+    private final String mTitle;
+    private final ResultTypes mType;
     private final Number mValue;
 
     /**
@@ -17,7 +18,7 @@ public class ValueResult extends Number implements Results {
      * @param type Type or category of the value.
      * @param value Number stored as a result.
      */
-    public ValueResult (String title, String type, Number value) {
+    public ValueResult (String title, ResultTypes type, Number value) {
         this.mTitle = title;
         this.mType = type;
         this.mValue = value;
@@ -30,7 +31,7 @@ public class ValueResult extends Number implements Results {
      * @param value Number stored as a result.
      */
     public ValueResult (String title, Number value) {
-        this(title, ResultTypes.Value.toString(), value);
+        this(title, ResultTypes.Value, value);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class ValueResult extends Number implements Results {
     }
 
     @Override
-    public String getType () {
+    public ResultTypes getType () {
         return mType;
     }
 

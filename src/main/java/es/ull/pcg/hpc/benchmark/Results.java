@@ -1,5 +1,7 @@
 package es.ull.pcg.hpc.benchmark;
 
+import es.ull.pcg.hpc.benchmark.results.ResultTypes;
+
 /**
  * Common interface for benchmark results.
  */
@@ -17,7 +19,7 @@ public interface Results {
      *
      * @return The type.
      */
-    String getType ();
+    ResultTypes getType ();
 
     /**
      * Accept being processed by a {@link ResultsProcessor}.

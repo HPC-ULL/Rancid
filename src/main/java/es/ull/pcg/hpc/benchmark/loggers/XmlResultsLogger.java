@@ -28,7 +28,7 @@ public class XmlResultsLogger extends IndentedResultsLogger {
     @Override
     public void processMap (MapResult map) {
         writeIndentation();
-        mOut.println("<node type=\"" + map.getType() + "\">");
+        mOut.println("<node type=\"" + map.getType().toString() + "\">");
 
         indent();
 
@@ -42,7 +42,7 @@ public class XmlResultsLogger extends IndentedResultsLogger {
         for (Results result: map.values()) {
             if (result instanceof ValueResult) {
                 writeIndentation();
-                mOut.println("<node type=\"" + result.getType() + "\">");
+                mOut.println("<node type=\"" + result.getType().toString() + "\">");
 
                 indent();
 
@@ -79,7 +79,7 @@ public class XmlResultsLogger extends IndentedResultsLogger {
     @Override
     public void processList (ListResult list) {
         writeIndentation();
-        mOut.println("<node type=\"" + list.getType() + "\">");
+        mOut.println("<node type=\"" + list.getType().toString() + "\">");
 
         indent();
 

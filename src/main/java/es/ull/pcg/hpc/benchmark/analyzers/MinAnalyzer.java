@@ -28,6 +28,6 @@ public class MinAnalyzer extends MetricReduceAnalyzer {
 
     @Override
     protected Results reduceMetric (ListResult metric) {
-        return new ValueResult(getName(), ResultTypes.Analysis.toString(), MathUtils.min(metric));
+        return new ValueResult(getName(), ResultTypes.Analysis, MathUtils.min(metric));
     }
 }

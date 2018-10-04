@@ -53,7 +53,7 @@ public abstract class MetricReduceAnalyzer extends ResultsProcessor implements R
 
     @Override
     public void processList (ListResult list) {
-        if (ResultTypes.Metric.toString().equals(list.getType()) && list.getTitle().equals(mMetricName)) {
+        if (ResultTypes.Metric == list.getType() && list.getTitle().equals(mMetricName)) {
             mCachedValues.put(getName(), reduceMetric(list));
         }
         else {
