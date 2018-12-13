@@ -11,8 +11,8 @@ public class BenchmarkManager {
     private final List<Benchmark> mBenchmarks;
     private final List<Meter> mMeters;
     private final List<ProgressListener> mProgressListeners;
-    private final List<ResultsAnalyzer> mGlobalAnalyzers;
-    private final List<ResultsAnalyzer> mRunAnalyzers;
+    private final List<ResultsProcessor> mGlobalProcessors;
+    private final List<ResultsProcessor> mRunProcessors;
     private final List<ResultsLogger> mGlobalLoggers;
     private final List<ProgressiveResultsLogger> mOnlineLoggers;
 
@@ -25,8 +25,8 @@ public class BenchmarkManager {
         this.mBenchmarks = new ArrayList<>();
         this.mMeters = new ArrayList<>();
         this.mProgressListeners = new ArrayList<>();
-        this.mGlobalAnalyzers = new ArrayList<>();
-        this.mRunAnalyzers = new ArrayList<>();
+        this.mGlobalProcessors = new ArrayList<>();
+        this.mRunProcessors = new ArrayList<>();
         this.mGlobalLoggers = new ArrayList<>();
         this.mOnlineLoggers = new ArrayList<>();
         this.mResults = new ArrayList<>();
@@ -41,11 +41,11 @@ public class BenchmarkManager {
      *     Every benchmark added with {@link #addBenchmark(Benchmark)} is executed in sequence, and progress listeners
      *     added with {@link #addProgressListener(ProgressListener)} are notified as benchmarking progresses. Results
      *     are processed and logged in real time through the classes specified in
-     *     {@link #addRunAnalyzer(ResultsAnalyzer)} and {@link #addOnlineLogger(ProgressiveResultsLogger)}.
+     *     {@link #addRunProcessor(ResultsProcessor)} and {@link #addOnlineLogger(ProgressiveResultsLogger)}.
      * </p>
      * <p>
-     *     Once benchmarks are finished, global analyzers added through calls to
-     *     {@link #addGlobalAnalyzer(ResultsAnalyzer)} are used to process the complete list of results, and these are
+     *     Once benchmarks are finished, global processors added through calls to
+     *     {@link #addGlobalProcessor(ResultsProcessor)} are used to process the complete list of results, and these are
      *     logged by logger added through {@link #addGlobalLogger(ResultsLogger)}.
      * </p>
      */
@@ -70,13 +70,13 @@ public class BenchmarkManager {
             for (ProgressiveResultsLogger logger: mOnlineLoggers)
                 logger.startProgressiveLog(benchmark.getName());
 
-            Results results = benchmark.benchmark(mMeters, mProgressListeners, mRunAnalyzers, mOnlineLoggers);
+            Results results = benchmark.benchmark(mMeters, mProgressListeners, mRunProcessors, mOnlineLoggers);
 
             for (ProgressiveResultsLogger logger: mOnlineLoggers)
                 logger.endProgressiveLog();
 
-            for (ResultsAnalyzer analyzer: mGlobalAnalyzers)
-                analyzer.analyze(results);
+            for (ResultsProcessor processor: mGlobalProcessors)
+                processor.process(results);
 
             for (ResultsLogger logger: mGlobalLoggers)
                 logger.log(results);
@@ -149,8 +149,8 @@ public class BenchmarkManager {
      *
      * @return The list of global analyzers.
      */
-    public List<ResultsAnalyzer> getGlobalAnalyzers () {
-        return mGlobalAnalyzers;
+    public List<ResultsProcessor> getGlobalProcessors () {
+        return mGlobalProcessors;
     }
 
     /**
@@ -158,9 +158,9 @@ public class BenchmarkManager {
      *
      * @param analyzer The new global analyzer.
      */
-    public void addGlobalAnalyzer (ResultsAnalyzer analyzer) {
+    public void addGlobalProcessor (ResultsProcessor analyzer) {
         if (analyzer != null)
-            mGlobalAnalyzers.add(analyzer);
+            mGlobalProcessors.add(analyzer);
     }
 
     /**
@@ -168,8 +168,8 @@ public class BenchmarkManager {
      *
      * @return The list of intermediate analyzers.
      */
-    public List<ResultsAnalyzer> getRunAnalyzers () {
-        return mRunAnalyzers;
+    public List<ResultsProcessor> getRunProcessors () {
+        return mRunProcessors;
     }
 
     /**
@@ -177,9 +177,9 @@ public class BenchmarkManager {
      *
      * @param analyzer The new intermediate analyzer.
      */
-    public void addRunAnalyzer (ResultsAnalyzer analyzer) {
+    public void addRunProcessor (ResultsProcessor analyzer) {
         if (analyzer != null)
-            mRunAnalyzers.add(analyzer);
+            mRunProcessors.add(analyzer);
     }
 
     /**

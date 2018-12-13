@@ -8,17 +8,17 @@ import es.ull.pcg.hpc.benchmark.results.ValueResult;
 import es.ull.pcg.hpc.benchmark.utils.MathUtils;
 
 /**
- * Benchmark results analyzer that calculates the max of a given metric found in the results.
+ * Benchmark results analyzer that calculates the arithmetic average of a given metric found in the results.
  */
-public class MaxAnalyzer extends MetricReduceProcessor {
-    public static final String NAME = "Max";
+public class ArithmeticAverageAnalyzer extends MetricReduceProcessor {
+    public static final String NAME = "Arithmetic Avg";
 
     /**
-     * Create a new max analyzer.
+     * Create a new arithmeticAvg analyzer.
      *
-     * @param metricName Name of the metric for which to calculate the maximum.
+     * @param metricName Name of the metric for which to calculate the arithmeticAvg.
      */
-    public MaxAnalyzer (String metricName) {
+    public ArithmeticAverageAnalyzer (String metricName) {
         super(metricName);
     }
 
@@ -33,6 +33,6 @@ public class MaxAnalyzer extends MetricReduceProcessor {
 
     @Override
     protected Results reduceMetric (ListResult metric) {
-        return new ValueResult(processedMetricTitle(), ResultTypes.Analysis, MathUtils.max(metric));
+        return new ValueResult(processedMetricTitle(), ResultTypes.Analysis, MathUtils.arithmeticAvg(metric));
     }
 }

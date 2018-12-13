@@ -1,8 +1,5 @@
-package es.ull.pcg.hpc.benchmark.analyzers;
+package es.ull.pcg.hpc.benchmark;
 
-import es.ull.pcg.hpc.benchmark.Results;
-import es.ull.pcg.hpc.benchmark.ResultsAnalyzer;
-import es.ull.pcg.hpc.benchmark.ResultsProcessor;
 import es.ull.pcg.hpc.benchmark.results.ListResult;
 import es.ull.pcg.hpc.benchmark.results.MapResult;
 import es.ull.pcg.hpc.benchmark.results.ResultTypes;
@@ -12,58 +9,50 @@ import es.ull.pcg.hpc.benchmark.results.ValueResult;
  * Benchmark results analyzer template for adding analysis nodes to the results by processing the list of measurements
  * obtained for a given metric during a set of repetitions.
  */
-public abstract class MetricReduceAnalyzer extends ResultsProcessor implements ResultsAnalyzer {
+public abstract class MetricReduceProcessor extends ResultsProcessor {
     private final String mMetricName;
-    private MapResult mCachedValues;
+    private MapResult mAddedNodes;
 
     /**
      * Initialize the analyzer template.
      *
      * @param metricName Name of the metric to analyze.
      */
-    protected MetricReduceAnalyzer (String metricName) {
+    protected MetricReduceProcessor (String metricName) {
         this.mMetricName = metricName;
-        this.mCachedValues = null;
-    }
-
-    @Override
-    public void analyze (Results results) {
-        process(results);
-    }
-
-    @Override
-    public String getName () {
-        return mMetricName;
+        this.mAddedNodes = null;
     }
 
     @Override
     public void processMap (MapResult map) {
-        MapResult prevCached = mCachedValues;
+        super.processMap(map);
 
-        mCachedValues = MapResult.createTemp();
+        MapResult prevNodes = mAddedNodes;
+        mAddedNodes = MapResult.createTemp();
 
         for (Results result: map.values())
             process(result);
 
-        map.putAll(mCachedValues);
-
-        mCachedValues.clear();
-        mCachedValues = prevCached;
+        map.putAll(mAddedNodes);
+        mAddedNodes.clear();
+        mAddedNodes = prevNodes;
     }
 
     @Override
     public void processList (ListResult list) {
-        if (ResultTypes.Metric == list.getType() && list.getTitle().equals(mMetricName)) {
-            mCachedValues.put(getName(), reduceMetric(list));
+        super.processList(list);
+
+        if (ResultTypes.Metric == list.getType() && (mMetricName == null || list.getTitle().equals(mMetricName))) {
+            Results reduced = reduceMetric(list);
+
+            if (reduced != null)
+                mAddedNodes.put(processedMetricTitle(), reduced);
         }
         else {
             for (Results result: list)
                 process(result);
         }
     }
-
-    @Override
-    public void processValue (ValueResult value) {}
 
     /**
      * Perform the reduction over the list of results obtained for the selected metric and a single set of parameters.

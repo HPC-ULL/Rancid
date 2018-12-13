@@ -34,7 +34,7 @@ public class MultipleBenchmark extends GenericBenchmark {
     }
 
     @Override
-    public Results benchmark (List<Meter> meters, List<ProgressListener> progress, List<ResultsAnalyzer> analyzers,
+    public Results benchmark (List<Meter> meters, List<ProgressListener> progress, List<ResultsProcessor> processors,
                               List<ProgressiveResultsLogger> loggers) {
         for (SimpleBenchmark impl: mImplementations)
             impl.setStopCondition(mStop);
@@ -49,7 +49,7 @@ public class MultipleBenchmark extends GenericBenchmark {
             for (Meter meter: meters)
                 meter.reset();
 
-            results.put(impl.getName(), impl.benchmark(meters, progress, analyzers, loggers));
+            results.put(impl.getName(), impl.benchmark(meters, progress, processors, loggers));
         }
 
         return results;

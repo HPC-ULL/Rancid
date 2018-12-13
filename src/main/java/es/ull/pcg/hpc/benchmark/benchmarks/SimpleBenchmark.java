@@ -39,7 +39,7 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
     }
 
     @Override
-    public Results benchmark (List<Meter> meters, List<ProgressListener> progress, List<ResultsAnalyzer> analyzers,
+    public Results benchmark (List<Meter> meters, List<ProgressListener> progress, List<ResultsProcessor> processors,
                               List<ProgressiveResultsLogger> loggers) {
         ArrayList<String> meterNames = new ArrayList<>(meters.size());
 
@@ -67,6 +67,7 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
                 logger.enterMap(parameters.getTitle(), ResultTypes.ParameterSet.toString());
 
             MapResult paramResults = new MapResult(parameters.getTitle(), ResultTypes.ParameterSet, meterNames);
+
             for (Meter meter: meters)
                 paramResults.put(meter.getName(), new ListResult(meter.getName(), ResultTypes.Metric));
 
@@ -106,8 +107,8 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
             }
 
             // Online analysis of results
-            for (ResultsAnalyzer analyzer: analyzers)
-                analyzer.analyze(paramResults);
+            for (ResultsProcessor processor: processors)
+                processor.process(paramResults);
 
             // Logging of results for the current set of parameters
             for (Map.Entry<String, Results> entry: paramResults.entrySet()) {

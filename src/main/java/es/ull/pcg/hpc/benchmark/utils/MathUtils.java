@@ -60,12 +60,12 @@ public class MathUtils {
     }
 
     /**
-     * Calculate the average of the values.
+     * Calculate the arithmetic average of the values.
      *
      * @param result List of values to process.
      * @return The average.
      */
-    public static double average (ListResult result) {
+    public static double arithmeticAvg (ListResult result) {
         final int n = result.size();
         return n > 0? sum(result) / n : 0.0;
     }
@@ -77,32 +77,30 @@ public class MathUtils {
      * @return The sample variance.
      */
     public static double sampleVariance (ListResult result) {
-        final int n = result.size();
-
-        if (n <= 1)
-            return 0.0;
-
-        final double avg = average(result);
-        return sampleVariance(avg, result);
+        final double avg = arithmeticAvg(result);
+        return sampleVariance(result, avg);
     }
 
     /**
      * Calculate the sample variance of the values.
      *
-     * @param avg The average of the values.
      * @param result List of values to process.
+     * @param avg The arithmetic average of the values.
      * @return The sample variance.
      */
-    public static double sampleVariance (double avg, ListResult result) {
+    public static double sampleVariance (ListResult result, double avg) {
         final int n = result.size();
-        double value = 0.0;
 
         if (n > 1) {
+            double value = 0.0;
+
             for (Results res: result)
                 value += Math.pow(((ValueResult) res).doubleValue() - avg, 2);
+
+            return value / (n - 1);
         }
 
-        return value / (n - 1);
+        return 0.0;
     }
 
     /**
@@ -114,5 +112,32 @@ public class MathUtils {
     public static double sampleStdDev (ListResult result) {
         final int n = result.size();
         return n > 1? Math.sqrt(sampleVariance(result)) : 0.0;
+    }
+
+    public static int[] histogram (ListResult result, int bins) {
+        return histogram(result, min(result), max(result), bins);
+    }
+
+    public static int[] histogram (ListResult result, double min, double max, int bins) {
+        final int n = result.size();
+        final double interval = max - min;
+
+        if (n == 0 || interval <= 0.0 || bins == 0)
+            return new int[bins];
+
+        int[] hist = new int[bins];
+        double step = interval / bins;
+
+        for (Results res: result) {
+            double value = ((ValueResult) res).doubleValue();
+            int idx = (int)((value - min) / step);
+
+            if (idx < 0) idx = 0;
+            else if (idx >= bins) idx = bins - 1;
+
+            ++hist[idx];
+        }
+
+        return hist;
     }
 }

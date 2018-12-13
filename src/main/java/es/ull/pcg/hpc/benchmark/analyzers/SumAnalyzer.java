@@ -1,7 +1,7 @@
 package es.ull.pcg.hpc.benchmark.analyzers;
 
+import es.ull.pcg.hpc.benchmark.MetricReduceProcessor;
 import es.ull.pcg.hpc.benchmark.Results;
-import es.ull.pcg.hpc.benchmark.ResultsAnalyzer;
 import es.ull.pcg.hpc.benchmark.results.ListResult;
 import es.ull.pcg.hpc.benchmark.results.ResultTypes;
 import es.ull.pcg.hpc.benchmark.results.ValueResult;
@@ -10,7 +10,7 @@ import es.ull.pcg.hpc.benchmark.utils.MathUtils;
 /**
  * Benchmark results analyzer that sums the values of a given metric found in the results.
  */
-public class SumAnalyzer extends MetricReduceAnalyzer {
+public class SumAnalyzer extends MetricReduceProcessor {
     public static final String NAME = "Total";
 
     /**
@@ -22,13 +22,17 @@ public class SumAnalyzer extends MetricReduceAnalyzer {
         super(metricName);
     }
 
+    public static String processedMetricTitle (String metricTitle) {
+        return metricTitle + " " + NAME;
+    }
+
     @Override
-    public String getName () {
-        return super.getName() + " " + NAME;
+    public String processedMetricTitle () {
+        return processedMetricTitle(super.processedMetricTitle());
     }
 
     @Override
     protected Results reduceMetric (ListResult metric) {
-        return new ValueResult(getName(), ResultTypes.Analysis, MathUtils.sum(metric));
+        return new ValueResult(processedMetricTitle(), ResultTypes.Analysis, MathUtils.sum(metric));
     }
 }

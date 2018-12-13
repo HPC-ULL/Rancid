@@ -29,6 +29,7 @@ public class JsonResultsLogger extends IndentedResultsLogger {
 
     @Override
     public void processMap (MapResult map) {
+        super.processMap(map);
         writeIndentation();
         mOut.println("{");
 
@@ -71,6 +72,7 @@ public class JsonResultsLogger extends IndentedResultsLogger {
 
     @Override
     public void processList (ListResult list) {
+        super.processList(list);
         writeIndentation();
         mOut.println("{");
 
@@ -118,6 +120,7 @@ public class JsonResultsLogger extends IndentedResultsLogger {
 
     @Override
     public void processValue (ValueResult value) {
+        super.processValue(value);
         writeIndentation();
         mOut.println("{");
 

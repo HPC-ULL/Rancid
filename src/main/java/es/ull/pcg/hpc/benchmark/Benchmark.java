@@ -4,8 +4,8 @@ import java.util.List;
 
 /**
  * A Benchmark contains a piece of code that is repeatedly executed by a {@link BenchmarkManager}, subject to a
- * {@link StopCondition}, instrumented through a set of {@link Meter}, processed by a list of {@link ResultsAnalyzer}
- * and which produces {@link Results} communicated through some {@link ProgressListener}. It can process several sets
+ * {@link StopCondition}, instrumented through a set of {@link Meter}, processed by a list of {@link ResultsProcessor}
+ * and which produces {@link Results} communicated through some {@link ResultsLogger}. It can process several sets
  * of {@link Parameters}.
  */
 public interface Benchmark {
@@ -14,16 +14,16 @@ public interface Benchmark {
      * implemented instead in the {@link #preBenchmark(Parameters)}, {@link #preRun()}, {@link #postBenchmark()} or
      * {@link #postRun()} methods.
      *
-     * @param meters    List of meters used to measure execution metrics. They start in order, so that the last meter
-     *                  is not affected by the overhead of running any of the others. The first meter, however, will
-     *                  include the overhead of starting and stopping all other metrics.
-     * @param progress  Classes used to notify in real time the progress status of the benchmark.
-     * @param analyzers List of analyzers that take partial results in order to filter and generate new data.
-     * @param loggers   List of loggers that are updated as data is generated.
+     * @param meters     List of meters used to measure execution metrics. They start in order, so that the last meter
+     *                   is not affected by the overhead of running any of the others. The first meter, however, will
+     *                   include the overhead of starting and stopping all other metrics.
+     * @param progress   Classes used to notify in real time the progress status of the benchmark.
+     * @param processors List of processors that take partial results in order to filter and generate new data.
+     * @param loggers    List of loggers that are updated as data is generated.
      *
      * @return The results of measuring the specified metrics when running the benchmark code.
      */
-    Results benchmark (List<Meter> meters, List<ProgressListener> progress, List<ResultsAnalyzer> analyzers,
+    Results benchmark (List<Meter> meters, List<ProgressListener> progress, List<ResultsProcessor> processors,
                        List<ProgressiveResultsLogger> loggers);
 
     /**
