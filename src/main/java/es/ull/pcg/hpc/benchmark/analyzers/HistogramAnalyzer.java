@@ -14,7 +14,7 @@ public class HistogramAnalyzer extends MetricReduceProcessor {
     public static final String NAME = "Histogram";
     public static final String BIN_NAME = "Bin";
 
-    protected double mCurrentMax, mCurrentMin;
+    protected Number mCurrentMax, mCurrentMin;
     private final int mBins;
 
     /**
