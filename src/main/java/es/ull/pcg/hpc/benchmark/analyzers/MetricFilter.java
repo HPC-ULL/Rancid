@@ -1,7 +1,6 @@
 package es.ull.pcg.hpc.benchmark.analyzers;
 
 import es.ull.pcg.hpc.benchmark.Results;
-import es.ull.pcg.hpc.benchmark.ResultsAnalyzer;
 import es.ull.pcg.hpc.benchmark.ResultsProcessor;
 import es.ull.pcg.hpc.benchmark.results.ListResult;
 import es.ull.pcg.hpc.benchmark.results.MapResult;
@@ -10,7 +9,7 @@ import es.ull.pcg.hpc.benchmark.results.ValueResult;
 /**
  * Benchmark results analyzer that removes a given metric found in the results.
  */
-public class MetricFilter extends ResultsProcessor implements ResultsAnalyzer {
+public class MetricFilter extends ResultsProcessor {
     public static final String TITLE = "Filter";
 
     private final String mMetricTitle;
@@ -22,16 +21,6 @@ public class MetricFilter extends ResultsProcessor implements ResultsAnalyzer {
      */
     public MetricFilter (String metricTitle) {
         this.mMetricTitle = metricTitle;
-    }
-
-    @Override
-    public void analyze (Results results) {
-        process(results);
-    }
-
-    @Override
-    public String getTitle () {
-        return mMetricTitle + " " + TITLE;
     }
 
     @Override

@@ -77,7 +77,7 @@ public class BenchmarkRunner {
 
         BenchmarkManager mgr = getParent().getParent();
         List<Meter> meters = mgr.getMeters();
-        List<ResultsAnalyzer> analyzers = mgr.getRunAnalyzers();
+        List<ResultsProcessor> processors = mgr.getRunProcessors();
         List<ProgressiveResultsLogger> loggers = mgr.getOnlineLoggers();
 
         ArrayList<String> meterTitles = new ArrayList<>(meters.size());
@@ -125,8 +125,8 @@ public class BenchmarkRunner {
         }
 
         // Online analysis of results
-        for (ResultsAnalyzer analyzer: analyzers)
-            analyzer.analyze(paramResults);
+        for (ResultsProcessor processor: processors)
+            processor.process(paramResults);
 
         for (Map.Entry<String, Results> entry: paramResults.entrySet()) {
             Results result = entry.getValue();

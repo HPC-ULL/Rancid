@@ -1,7 +1,6 @@
 package es.ull.pcg.hpc.benchmark.analyzers;
 
 import es.ull.pcg.hpc.benchmark.Results;
-import es.ull.pcg.hpc.benchmark.ResultsAnalyzer;
 import es.ull.pcg.hpc.benchmark.ResultsProcessor;
 import es.ull.pcg.hpc.benchmark.results.ResultTypes;
 import es.ull.pcg.hpc.benchmark.results.ListResult;
@@ -12,7 +11,7 @@ import es.ull.pcg.hpc.benchmark.results.ValueResult;
  * Results filtering analyzer that removes the first set of results for each run and metric, which correspond to warm-up
  * iterations.
  */
-public class WarmupIterationsFilter extends ResultsProcessor implements ResultsAnalyzer {
+public class WarmupIterationsFilter extends ResultsProcessor {
     public static final String TITLE = "Warmup Filter";
 
     private final int mWarmup;
@@ -23,16 +22,6 @@ public class WarmupIterationsFilter extends ResultsProcessor implements ResultsA
      */
     public WarmupIterationsFilter (int warmup) {
         this.mWarmup = warmup;
-    }
-
-    @Override
-    public void analyze (Results results) {
-        process(results);
-    }
-
-    @Override
-    public String getTitle () {
-        return TITLE;
     }
 
     @Override

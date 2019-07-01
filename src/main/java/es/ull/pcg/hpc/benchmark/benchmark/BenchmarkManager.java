@@ -12,8 +12,8 @@ public class BenchmarkManager {
     private final List<Benchmark> mBenchmarks;
     private final List<Meter> mMeters;
     private final List<ProgressListener> mProgressListeners;
-    private final List<ResultsAnalyzer> mGlobalAnalyzers;
-    private final List<ResultsAnalyzer> mRunAnalyzers;
+    private final List<ResultsProcessor> mGlobalProcessors;
+    private final List<ResultsProcessor> mRunProcessors;
     private final List<ResultsLogger> mGlobalLoggers;
     private final List<ProgressiveResultsLogger> mOnlineLoggers;
 
@@ -24,8 +24,8 @@ public class BenchmarkManager {
         this.mBenchmarks = new ArrayList<>();
         this.mMeters = new ArrayList<>();
         this.mProgressListeners = new ArrayList<>();
-        this.mGlobalAnalyzers = new ArrayList<>();
-        this.mRunAnalyzers = new ArrayList<>();
+        this.mGlobalProcessors = new ArrayList<>();
+        this.mRunProcessors = new ArrayList<>();
         this.mGlobalLoggers = new ArrayList<>();
         this.mOnlineLoggers = new ArrayList<>();
     }
@@ -39,11 +39,11 @@ public class BenchmarkManager {
      *     Every benchmark added with {@link #addBenchmark(Benchmark)} is executed in sequence, and progress listeners
      *     added with {@link #addProgressListener(ProgressListener)} are notified as benchmarking progresses. Results
      *     are processed and logged in real time through the classes specified in
-     *     {@link #addRunAnalyzer(ResultsAnalyzer)} and {@link #addOnlineLogger(ProgressiveResultsLogger)}.
+     *     {@link #addRunProcessor(ResultsProcessor)} and {@link #addOnlineLogger(ProgressiveResultsLogger)}.
      * </p>
      * <p>
-     *     Once benchmarks are finished, global analyzers added through calls to
-     *     {@link #addGlobalAnalyzer(ResultsAnalyzer)} are used to process the complete list of results, and these are
+     *     Once benchmarks are finished, global processors added through calls to
+     *     {@link #addGlobalProcessor(ResultsProcessor)} are used to process the complete list of results, and these are
      *     logged by logger added through {@link #addGlobalLogger(ResultsLogger)}.
      * </p>
      */
@@ -61,8 +61,8 @@ public class BenchmarkManager {
             Results benchmarkResults = benchmark.benchmark();
 
             // Process and log complete results
-            for (ResultsAnalyzer analyzer: mGlobalAnalyzers)
-                analyzer.analyze(benchmarkResults);
+            for (ResultsProcessor processor: mGlobalProcessors)
+                processor.process(benchmarkResults);
 
             for (ResultsLogger logger: mGlobalLoggers)
                 logger.log(benchmarkResults);
@@ -132,39 +132,41 @@ public class BenchmarkManager {
     }
 
     /**
-     * Obtain the list of analyzers applied to global benchmark results.
+     * Obtain the list of processors applied to global benchmark results.
      *
-     * @return The list of global analyzers.
+     * @return The list of global processors.
      */
-    public List<ResultsAnalyzer> getGlobalAnalyzers () {
-        return mGlobalAnalyzers;
+    public List<ResultsProcessor> getGlobalProcessors () {
+        return mGlobalProcessors;
     }
 
     /**
-     * Add a new analyzer to apply to global benchmark results.
+     * Add a new processor to apply to global benchmark results.
      *
-     * @param analyzer The new global analyzer.
+     * @param processor The new global processor.
      */
-    public void addGlobalAnalyzer (ResultsAnalyzer analyzer) {
-        mGlobalAnalyzers.add(analyzer);
+    public void addGlobalProcessor (ResultsProcessor processor) {
+        if (processor != null)
+            mGlobalProcessors.add(processor);
     }
 
     /**
-     * Obtain the list of analyzers applied to each intermediate result.
+     * Obtain the list of processors applied to each intermediate result.
      *
-     * @return The list of intermediate analyzers.
+     * @return The list of intermediate processors.
      */
-    public List<ResultsAnalyzer> getRunAnalyzers () {
-        return mRunAnalyzers;
+    public List<ResultsProcessor> getRunProcessors () {
+        return mRunProcessors;
     }
 
     /**
-     * Add a new analyzer to apply to intermediate results.
+     * Add a new processor to apply to intermediate results.
      *
-     * @param analyzer The new intermediate analyzer.
+     * @param processor The new intermediate processor.
      */
-    public void addRunAnalyzer (ResultsAnalyzer analyzer) {
-        mRunAnalyzers.add(analyzer);
+    public void addRunProcessor (ResultsProcessor processor) {
+        if (processor != null)
+            mRunProcessors.add(processor);
     }
 
     /**

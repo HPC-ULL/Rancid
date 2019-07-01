@@ -5,20 +5,23 @@ import es.ull.pcg.hpc.benchmark.Parameters;
 import es.ull.pcg.hpc.benchmark.StopCondition;
 import es.ull.pcg.hpc.benchmark.analyzers.*;
 import es.ull.pcg.hpc.benchmark.benchmark.*;
+import es.ull.pcg.hpc.benchmark.benchmark.actions.CompositeAction;
+import es.ull.pcg.hpc.benchmark.benchmark.actions.ConditionalAction;
+import es.ull.pcg.hpc.benchmark.benchmark.actions.PrintAction;
+import es.ull.pcg.hpc.benchmark.benchmark.actions.SleepAction;
+import es.ull.pcg.hpc.benchmark.filters.WindowIterationsFilter;
 import es.ull.pcg.hpc.benchmark.loggers.HumanReadableResultsLogger;
 import es.ull.pcg.hpc.benchmark.loggers.JsonResultsLogger;
 import es.ull.pcg.hpc.benchmark.meters.ExecutionTimeMeter;
 import es.ull.pcg.hpc.benchmark.meters.SuccessfulRunsMeter;
 import es.ull.pcg.hpc.benchmark.printers.PrintStreamOutputPrinter;
+import es.ull.pcg.hpc.benchmark.removers.InvalidRunsRemover;
+import es.ull.pcg.hpc.benchmark.removers.ResultsRemover;
+import es.ull.pcg.hpc.benchmark.results.ResultTypes;
 import es.ull.pcg.hpc.benchmark.stopconditions.AndStopCondition;
-import es.ull.pcg.hpc.benchmark.stopconditions.ErrorStopCondition;
+import es.ull.pcg.hpc.benchmark.stopconditions.ErrorWindowStopCondition;
 import es.ull.pcg.hpc.benchmark.stopconditions.FixedIterationsStopCondition;
 import es.ull.pcg.hpc.benchmark.stopconditions.OrStopCondition;
-import es.ull.pcg.hpc.benchmark.benchmark.ModularBenchmarkRunner;
-import es.ull.pcg.hpc.benchmark.benchmark.actions.CompositeAction;
-import es.ull.pcg.hpc.benchmark.benchmark.actions.ConditionalAction;
-import es.ull.pcg.hpc.benchmark.benchmark.actions.PrintAction;
-import es.ull.pcg.hpc.benchmark.benchmark.actions.SleepAction;
 import java9.util.function.Predicate;
 import org.junit.Test;
 
@@ -75,11 +78,12 @@ public class SimpleTest {
     public void test () {
         OutputPrinter printer = new PrintStreamOutputPrinter(System.out);
         final int warmup = 10;
+        final int window = 20;
 
         // Create stop condition
         AndStopCondition andCondition = new AndStopCondition(
             new FixedIterationsStopCondition(20 + warmup),
-            new ErrorStopCondition(ExecutionTimeMeter.TITLE, warmup, 0.05));
+            new ErrorWindowStopCondition(ExecutionTimeMeter.TITLE, warmup, 0.05));
 
         StopCondition stopCondition = new OrStopCondition(andCondition, new FixedIterationsStopCondition(1000));
 
@@ -121,17 +125,38 @@ public class SimpleTest {
         BenchmarkManager mgr = new BenchmarkManager();
         mgr.addBenchmark(loopBenchmark);
 
-        // Configure benchmark manager
+        // Meters
         mgr.addMeter(new SuccessfulRunsMeter());
         mgr.addMeter(new ExecutionTimeMeter());
 
-        mgr.addRunAnalyzer(new WarmupIterationsFilter(warmup));
-        mgr.addRunAnalyzer(new SumAnalyzer(SuccessfulRunsMeter.TITLE));
-        mgr.addRunAnalyzer(new AverageAnalyzer(SuccessfulRunsMeter.TITLE));
-        mgr.addRunAnalyzer(new InvalidRunsFilter());
-        mgr.addRunAnalyzer(new AverageAnalyzer(ExecutionTimeMeter.TITLE));
-        mgr.addRunAnalyzer(new StdDeviationAnalyzer(ExecutionTimeMeter.TITLE));
+        // Processors
+        // - Add total number and proportion of successful runs analysis
+        mgr.addRunProcessor(new SumAnalyzer(SuccessfulRunsMeter.TITLE));
+        mgr.addRunProcessor(new ArithmeticAverageAnalyzer(SuccessfulRunsMeter.TITLE));
 
+        // - Remove invalid runs data, and the successful runs metric raw data
+        mgr.addRunProcessor(new InvalidRunsRemover());
+        mgr.addRunProcessor(new ResultsRemover(ResultTypes.Metric, SuccessfulRunsMeter.TITLE));
+
+        // - Calculate histogram, min, max, average and stddev of all successful runs
+        mgr.addRunProcessor(new HistogramAnalyzer(ExecutionTimeMeter.TITLE, 10));
+        mgr.addRunProcessor(new MinAnalyzer(ExecutionTimeMeter.TITLE));
+        mgr.addRunProcessor(new MaxAnalyzer(ExecutionTimeMeter.TITLE));
+        mgr.addRunProcessor(new ArithmeticAverageAnalyzer(ExecutionTimeMeter.TITLE));
+        mgr.addRunProcessor(new StdDeviationAnalyzer(ExecutionTimeMeter.TITLE));
+
+        // - Filter run data within the window used for the stop condition, and remove the rest of results
+        mgr.addRunProcessor(new WindowIterationsFilter(window));
+        mgr.addRunProcessor(new ResultsRemover(ResultTypes.Metric, ExecutionTimeMeter.TITLE));
+
+        // - Calculate histogram, min, max, average and stddev of runs inside the window
+        mgr.addRunProcessor(new HistogramAnalyzer(WindowIterationsFilter.processedMetricTitle(ExecutionTimeMeter.TITLE)));
+        mgr.addRunProcessor(new MinAnalyzer(WindowIterationsFilter.processedMetricTitle(ExecutionTimeMeter.TITLE)));
+        mgr.addRunProcessor(new MaxAnalyzer(WindowIterationsFilter.processedMetricTitle(ExecutionTimeMeter.TITLE)));
+        mgr.addRunProcessor(new ArithmeticAverageAnalyzer(WindowIterationsFilter.processedMetricTitle(ExecutionTimeMeter.TITLE)));
+        mgr.addRunProcessor(new StdDeviationAnalyzer(WindowIterationsFilter.processedMetricTitle(ExecutionTimeMeter.TITLE)));
+
+        // Loggers
         mgr.addOnlineLogger(new HumanReadableResultsLogger(printer));
         mgr.addGlobalLogger(new JsonResultsLogger(printer));
 

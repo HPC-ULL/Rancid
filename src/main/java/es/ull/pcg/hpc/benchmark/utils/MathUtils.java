@@ -9,21 +9,44 @@ import es.ull.pcg.hpc.benchmark.results.ValueResult;
  */
 public class MathUtils {
     /**
+     * Check if a number is floating point.
+     *
+     * @param number The number to check.
+     * @return Whether if the number is {@code float} or {@code double}.
+     */
+    public static boolean isFloatNumber (Number number) {
+        return number instanceof Float || number instanceof Double;
+    }
+
+    /**
+     * Compare two numbers.
+     *
+     * @param a First number.
+     * @param b Second number.
+     * @return {@code -1} if {@code a < b}, {@code 1} if {@code b < a}, and {@code 0} otherwise.
+     */
+    public static int compare (Number a, Number b) {
+        boolean isFloat = isFloatNumber(a) || isFloatNumber(b);
+        return isFloat? Double.compare(a.doubleValue(), b.doubleValue()) : Long.compare(a.longValue(), b.longValue());
+    }
+
+    /**
      * Calculate the minimum value.
      *
      * @param result List of values to process.
      * @return The minimum value.
      */
-    public static double min (ListResult result) {
-        double value = Double.MAX_VALUE;
+    public static Number min (ListResult result) {
+        Number minValue = null;
 
         for (Results res: result) {
-            double resultValue = ((ValueResult) res).doubleValue();
-            if (resultValue < value)
-                value = resultValue;
+            Number value = ((ValueResult) res);
+
+            if (minValue == null || compare(value, minValue) < 0)
+                minValue = value;
         }
 
-        return value;
+        return minValue == null? Long.MAX_VALUE : minValue;
     }
 
     /**
@@ -32,16 +55,17 @@ public class MathUtils {
      * @param result List of values to process.
      * @return The maximum value.
      */
-    public static double max (ListResult result) {
-        double value = Double.MIN_VALUE;
+    public static Number max (ListResult result) {
+        Number maxValue = null;
 
         for (Results res: result) {
-            double resultValue = ((ValueResult) res).doubleValue();
-            if (resultValue > value)
-                value = resultValue;
+            Number value = ((ValueResult) res);
+
+            if (maxValue == null || compare(value, maxValue) > 0)
+                maxValue = value;
         }
 
-        return value;
+        return maxValue == null? Long.MIN_VALUE : maxValue;
     }
 
     /**
@@ -50,24 +74,31 @@ public class MathUtils {
      * @param result List of values to process.
      * @return The sum of all values.
      */
-    public static double sum (ListResult result) {
-        double value = 0.0;
+    public static Number sum (ListResult result) {
+        Number sumValue = 0;
 
-        for (Results res: result)
-            value += ((ValueResult) res).doubleValue();
+        if (!result.isEmpty()) {
+            boolean isFloat = isFloatNumber((ValueResult) result.get(0));
 
-        return value;
+            for (Results res : result) {
+                Number value = ((ValueResult) res);
+                sumValue = isFloat? sumValue.doubleValue() + value.doubleValue() :
+                                    sumValue.longValue() + value.longValue();
+            }
+        }
+
+        return sumValue;
     }
 
     /**
-     * Calculate the average of the values.
+     * Calculate the arithmetic average of the values.
      *
      * @param result List of values to process.
      * @return The average.
      */
-    public static double average (ListResult result) {
+    public static double arithmeticAvg (ListResult result) {
         final int n = result.size();
-        return n > 0? sum(result) / n : 0.0;
+        return n > 0? sum(result).doubleValue() / n : 0.0;
     }
 
     /**
@@ -77,32 +108,30 @@ public class MathUtils {
      * @return The sample variance.
      */
     public static double sampleVariance (ListResult result) {
-        final int n = result.size();
-
-        if (n <= 1)
-            return 0.0;
-
-        final double avg = average(result);
-        return sampleVariance(avg, result);
+        final double avg = arithmeticAvg(result);
+        return sampleVariance(result, avg);
     }
 
     /**
      * Calculate the sample variance of the values.
      *
-     * @param avg The average of the values.
      * @param result List of values to process.
+     * @param avg The arithmetic average of the values.
      * @return The sample variance.
      */
-    public static double sampleVariance (double avg, ListResult result) {
+    public static double sampleVariance (ListResult result, double avg) {
         final int n = result.size();
-        double value = 0.0;
 
         if (n > 1) {
+            double value = 0.0;
+
             for (Results res: result)
                 value += Math.pow(((ValueResult) res).doubleValue() - avg, 2);
+
+            return value / (n - 1);
         }
 
-        return value / (n - 1);
+        return 0.0;
     }
 
     /**
@@ -116,20 +145,30 @@ public class MathUtils {
         return n > 1? Math.sqrt(sampleVariance(result)) : 0.0;
     }
 
-    /**
-     * Compare two {@link Number}.
-     *
-     * @param a First number.
-     * @param b Second number.
-     * @param <T> Type of the parameters.
-     *
-     * @return the value {@code 0} if {@code a == b}; a value less than {@code 0} if {@code a < b}; and a
-     * value greater than {@code 0} if {@code a > b}
-     */
-    public static <T extends Number> int compare (T a, T b) {
-        if (a instanceof Long || a instanceof Integer)
-            return Long.compare(a.longValue(), b.longValue());
-        else
-            return Double.compare(a.doubleValue(), b.doubleValue());
+    public static int[] histogram (ListResult result, int bins) {
+        return histogram(result, min(result), max(result), bins);
+    }
+
+    public static int[] histogram (ListResult result, Number min, Number max, int bins) {
+        final int n = result.size();
+        final double interval = max.doubleValue() - min.doubleValue();
+
+        if (n == 0 || interval <= 0.0 || bins == 0)
+            return new int[bins];
+
+        int[] hist = new int[bins];
+        double step = interval / bins;
+
+        for (Results res: result) {
+            double value = ((ValueResult) res).doubleValue();
+            int idx = (int)((value - min.doubleValue()) / step);
+
+            if (idx < 0) idx = 0;
+            else if (idx >= bins) idx = bins - 1;
+
+            ++hist[idx];
+        }
+
+        return hist;
     }
 }

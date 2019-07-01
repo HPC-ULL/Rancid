@@ -1,7 +1,6 @@
-package es.ull.pcg.hpc.benchmark.analyzers;
+package es.ull.pcg.hpc.benchmark.removers;
 
 import es.ull.pcg.hpc.benchmark.Results;
-import es.ull.pcg.hpc.benchmark.ResultsAnalyzer;
 import es.ull.pcg.hpc.benchmark.ResultsProcessor;
 import es.ull.pcg.hpc.benchmark.meters.SuccessfulRunsMeter;
 import es.ull.pcg.hpc.benchmark.results.ListResult;
@@ -14,23 +13,27 @@ import java.util.Iterator;
 /**
  * Benchmark results analyzer that filters out invalid results.
  */
-public class InvalidRunsFilter extends ResultsProcessor implements ResultsAnalyzer {
-    public static final String TITLE = "Invalid Filter";
+public class InvalidRunsRemover extends ResultsProcessor {
+    public static final String TITLE = "Valid";
 
-    private ListResult mInvalid = null;
+    private ListResult mInvalid;
 
-    @Override
-    public void analyze (Results results) {
-        process(results);
+    public InvalidRunsRemover () {
+        this.mInvalid = null;
+    }
+
+    public static String processedMetricTitle (String metricTitle) {
+        return TITLE + " " + metricTitle;
     }
 
     @Override
-    public String getTitle () {
-        return TITLE;
+    public String processedMetricTitle () {
+        return processedMetricTitle(super.processedMetricTitle());
     }
 
     @Override
     public void processMap (MapResult map) {
+        super.processMap(map);
         mInvalid = null;
 
         // Find the invalid values metric
@@ -41,17 +44,17 @@ public class InvalidRunsFilter extends ResultsProcessor implements ResultsAnalyz
                 break;
         }
 
-        // Apply filter to all metrics and remove successful runs
+        // Apply filter to all metrics and remove unsuccessful runs
         if (mInvalid != null) {
             for (Results value: map.values())
                 process(value);
-
-            map.remove(SuccessfulRunsMeter.TITLE);
         }
     }
 
     @Override
     public void processList (ListResult list) {
+        super.processList(list);
+
         if (mInvalid != null && list != mInvalid) {
             Iterator<Results> resultIterator = list.iterator();
             Iterator<Results> invalidIterator = mInvalid.iterator();
@@ -74,11 +77,6 @@ public class InvalidRunsFilter extends ResultsProcessor implements ResultsAnalyz
                     process(result);
             }
         }
-    }
-
-    @Override
-    public void processValue (ValueResult value) {
-
     }
 }
 

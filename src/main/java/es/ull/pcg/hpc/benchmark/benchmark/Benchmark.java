@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * A Benchmark contains a set of {@link BenchmarkConfiguration} that are executed by a {@link BenchmarkManager},
- * instrumented through a set of {@link Meter}, processed by a list of {@link ResultsAnalyzer}, and which produces
+ * instrumented through a set of {@link Meter}, processed by a list of {@link ResultsProcessor}, and which produces
  * {@link Results} communicated through some {@link ProgressListener}. It can process several sets of
  * {@link Parameters}.
  */
