@@ -34,7 +34,7 @@ public interface Meter {
      *
      * @return The name.
      */
-    String getName ();
+    String getTitle ();
 
     /**
      * Obtain the latest measured result, between the latest calls to {@link #start()} and {@link #stop()} or

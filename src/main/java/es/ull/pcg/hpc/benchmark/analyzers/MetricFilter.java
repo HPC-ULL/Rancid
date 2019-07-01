@@ -11,17 +11,17 @@ import es.ull.pcg.hpc.benchmark.results.ValueResult;
  * Benchmark results analyzer that removes a given metric found in the results.
  */
 public class MetricFilter extends ResultsProcessor implements ResultsAnalyzer {
-    public static final String NAME = "Filter";
+    public static final String TITLE = "Filter";
 
-    private final String mMetricName;
+    private final String mMetricTitle;
 
     /**
      * Create a new metric filter.
      *
-     * @param metricName Name of the metric to filter out from the results.
+     * @param metricTitle Name of the metric to filter out from the results.
      */
-    public MetricFilter (String metricName) {
-        this.mMetricName = metricName;
+    public MetricFilter (String metricTitle) {
+        this.mMetricTitle = metricTitle;
     }
 
     @Override
@@ -30,8 +30,8 @@ public class MetricFilter extends ResultsProcessor implements ResultsAnalyzer {
     }
 
     @Override
-    public String getName () {
-        return mMetricName + " " + NAME;
+    public String getTitle () {
+        return mMetricTitle + " " + TITLE;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class MetricFilter extends ResultsProcessor implements ResultsAnalyzer {
         for (Results result: map.values())
             process(result);
 
-        map.remove(mMetricName);
+        map.remove(mMetricTitle);
     }
 
     @Override

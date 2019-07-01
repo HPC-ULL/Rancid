@@ -16,5 +16,5 @@ public interface ResultsAnalyzer {
      *
      * @return The name.
      */
-    String getName ();
+    String getTitle ();
 }

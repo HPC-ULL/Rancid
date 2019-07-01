@@ -7,7 +7,7 @@ import es.ull.pcg.hpc.benchmark.results.ValueResult;
  * Meter that uses {@link System#nanoTime()} in order to measure execution time.
  */
 public class ExecutionTimeMeter implements Meter {
-    public static final String NAME = "Execution Time";
+    public static final String TITLE = "Execution Time";
 
     private long mStartTime, mStopTime;
 
@@ -32,12 +32,12 @@ public class ExecutionTimeMeter implements Meter {
     }
 
     @Override
-    public String getName () {
-        return NAME;
+    public String getTitle () {
+        return TITLE;
     }
 
     @Override
     public ValueResult getMeasure () {
-        return new ValueResult(getName(), mStopTime - mStartTime);
+        return new ValueResult(getTitle(), mStopTime - mStartTime);
     }
 }

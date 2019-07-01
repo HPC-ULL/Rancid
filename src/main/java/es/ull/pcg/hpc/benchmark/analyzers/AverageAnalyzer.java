@@ -1,7 +1,6 @@
 package es.ull.pcg.hpc.benchmark.analyzers;
 
 import es.ull.pcg.hpc.benchmark.Results;
-import es.ull.pcg.hpc.benchmark.ResultsAnalyzer;
 import es.ull.pcg.hpc.benchmark.results.ListResult;
 import es.ull.pcg.hpc.benchmark.results.ResultTypes;
 import es.ull.pcg.hpc.benchmark.results.ValueResult;
@@ -11,24 +10,24 @@ import es.ull.pcg.hpc.benchmark.utils.MathUtils;
  * Benchmark results analyzer that calculates the arithmetic average of a given metric found in the results.
  */
 public class AverageAnalyzer extends MetricReduceAnalyzer {
-    public static final String NAME = "Average";
+    public static final String TITLE = "Average";
 
     /**
      * Create a new average analyzer.
      *
-     * @param metricName Name of the metric for which to calculate the average.
+     * @param metricTitle Name of the metric for which to calculate the average.
      */
-    public AverageAnalyzer (String metricName) {
-        super(metricName);
+    public AverageAnalyzer (String metricTitle) {
+        super(metricTitle);
     }
 
     @Override
-    public String getName () {
-        return super.getName() + " " + NAME;
+    public String getTitle () {
+        return super.getTitle() + " " + TITLE;
     }
 
     @Override
     protected Results reduceMetric (ListResult metric) {
-        return new ValueResult(getName(), ResultTypes.Analysis, MathUtils.average(metric));
+        return new ValueResult(getTitle(), ResultTypes.Analysis, MathUtils.average(metric));
     }
 }

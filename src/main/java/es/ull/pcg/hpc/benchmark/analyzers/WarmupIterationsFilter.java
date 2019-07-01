@@ -13,7 +13,7 @@ import es.ull.pcg.hpc.benchmark.results.ValueResult;
  * iterations.
  */
 public class WarmupIterationsFilter extends ResultsProcessor implements ResultsAnalyzer {
-    public static final String NAME = "Warmup Filter";
+    public static final String TITLE = "Warmup Filter";
 
     private final int mWarmup;
 
@@ -31,8 +31,8 @@ public class WarmupIterationsFilter extends ResultsProcessor implements ResultsA
     }
 
     @Override
-    public String getName () {
-        return NAME;
+    public String getTitle () {
+        return TITLE;
     }
 
     @Override

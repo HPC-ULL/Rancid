@@ -6,8 +6,8 @@ import es.ull.pcg.hpc.benchmark.ProgressListener;
  * Template class that allows obtaining relative progress (i.e. percentage of the current progress) in real time.
  */
 public abstract class RelativeProgressListener implements ProgressListener {
-    protected String mBenchmarkName;
-    protected String mParametersName;
+    protected String mBenchmarkTitle;
+    protected String mParametersTitle;
 
     private int mTotalBenchmarks, mCurrentBenchmarks;
     private int mTotalParameters, mCurrentParameters;
@@ -33,34 +33,34 @@ public abstract class RelativeProgressListener implements ProgressListener {
 
     @Override
     public void start (int numBenchmarks) {
-        mBenchmarkName = null;
+        mBenchmarkTitle = null;
         mTotalBenchmarks = numBenchmarks;
         mCurrentBenchmarks = mCurrentParameters = 0;
     }
 
     @Override
     public void finish () {
-        mBenchmarkName = null;
+        mBenchmarkTitle = null;
         updateProgress();
     }
 
     @Override
-    public void startBenchmark (String benchmarkName, int numParameters) {
-        mBenchmarkName = benchmarkName;
+    public void startBenchmark (String benchmarkTitle, int numParameters) {
+        mBenchmarkTitle = benchmarkTitle;
         mTotalParameters = numParameters;
         updateProgress();
     }
 
     @Override
     public void finishBenchmark () {
-        mParametersName = null;
+        mParametersTitle = null;
         mCurrentParameters = 0;
         ++mCurrentBenchmarks;
     }
 
     @Override
-    public void startParameters (String parametersName) {
-        mParametersName = parametersName;
+    public void startParameters (String parametersTitle) {
+        mParametersTitle = parametersTitle;
         updateProgress();
     }
 

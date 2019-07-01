@@ -14,7 +14,7 @@ import es.ull.pcg.hpc.benchmark.utils.MathUtils;
  * a number of warm-up results.
  */
 public class ErrorStopCondition extends ResultsProcessor implements StopCondition {
-    private final String mMetricName;
+    private final String mMetricTitle;
     private final int mWarmup;
     private final double mCvTarget;
 
@@ -23,12 +23,12 @@ public class ErrorStopCondition extends ResultsProcessor implements StopConditio
     /**
      * Create a new error-based stop condition.
      *
-     * @param metricName Name of the metric for which to calculate the error.
+     * @param metricTitle Name of the metric for which to calculate the error.
      * @param warmup Number of ignored iteration measurements.
      * @param cvTarget Target maximum coefficient of variation.
      */
-    public ErrorStopCondition (String metricName, int warmup, double cvTarget) {
-        this.mMetricName = metricName;
+    public ErrorStopCondition (String metricTitle, int warmup, double cvTarget) {
+        this.mMetricTitle = metricTitle;
         this.mWarmup = warmup;
         this.mCvTarget = cvTarget;
     }
@@ -51,7 +51,7 @@ public class ErrorStopCondition extends ResultsProcessor implements StopConditio
     @Override
     public void processMap (MapResult map) {
         if (map.getType() == ResultTypes.ParameterSet) {
-            Results result = map.get(mMetricName);
+            Results result = map.get(mMetricTitle);
 
             if (result != null)
                 process(result);
@@ -64,7 +64,7 @@ public class ErrorStopCondition extends ResultsProcessor implements StopConditio
 
     @Override
     public void processList (ListResult list) {
-        if (list.getType() == ResultTypes.Metric && list.getTitle().equals(mMetricName) &&
+        if (list.getType() == ResultTypes.Metric && list.getTitle().equals(mMetricTitle) &&
             mWarmup < list.size()) {
             ListResult filtered = new ListResult(list.subList(mWarmup, list.size()), list.getTitle(), list.getType());
 

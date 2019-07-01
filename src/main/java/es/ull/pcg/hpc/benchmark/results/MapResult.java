@@ -18,13 +18,13 @@ public class MapResult extends TreeMap<String, Results> implements Results {
      *
      * @param title Descriptive name for the map.
      * @param type Type or category of this result.
-     * @param names Names of the results stored in the map.
+     * @param titles Names of the results stored in the map.
      */
-    public MapResult (String title, ResultTypes type, List<String> names) {
+    public MapResult (String title, ResultTypes type, List<String> titles) {
         this.mTitle = title;
         this.mType = type;
 
-        for (String name: names)
+        for (String name: titles)
             put(name, null);
     }
 

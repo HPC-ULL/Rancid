@@ -22,12 +22,12 @@ public interface ProgressListener {
     /**
      * Notifies that a benchmark is about to start running.
      *
-     * @param benchmarkName Name of the benchmark.
+     * @param benchmarkTitle Name of the benchmark.
      * @param numParameters Number of different {@link Parameters} with which the benchmark will run.
      *
      * @see #finishBenchmark()
      */
-    void startBenchmark (String benchmarkName, int numParameters);
+    void startBenchmark (String benchmarkTitle, int numParameters);
 
     /**
      * Notifies that a benchmark has just finished running.
@@ -39,11 +39,11 @@ public interface ProgressListener {
     /**
      * Notifies that a benchmark run with a certain set of parameters is about to start running.
      *
-     * @param parametersName Name of the parameter set.
+     * @param parametersTitle Name of the parameter set.
      *
      * @see #finishParameters()
      */
-    void startParameters (String parametersName);
+    void startParameters (String parametersTitle);
 
     /**
      * Notifies that a benchmark run has just finished running.

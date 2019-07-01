@@ -5,7 +5,7 @@ import es.ull.pcg.hpc.benchmark.results.ListResult;
 import es.ull.pcg.hpc.benchmark.results.ValueResult;
 
 /**
- * Set of math methods working on {@link ListResult}.
+ * Set of math method utilities.
  */
 public class MathUtils {
     /**
@@ -114,5 +114,22 @@ public class MathUtils {
     public static double sampleStdDev (ListResult result) {
         final int n = result.size();
         return n > 1? Math.sqrt(sampleVariance(result)) : 0.0;
+    }
+
+    /**
+     * Compare two {@link Number}.
+     *
+     * @param a First number.
+     * @param b Second number.
+     * @param <T> Type of the parameters.
+     *
+     * @return the value {@code 0} if {@code a == b}; a value less than {@code 0} if {@code a < b}; and a
+     * value greater than {@code 0} if {@code a > b}
+     */
+    public static <T extends Number> int compare (T a, T b) {
+        if (a instanceof Long || a instanceof Integer)
+            return Long.compare(a.longValue(), b.longValue());
+        else
+            return Double.compare(a.doubleValue(), b.doubleValue());
     }
 }

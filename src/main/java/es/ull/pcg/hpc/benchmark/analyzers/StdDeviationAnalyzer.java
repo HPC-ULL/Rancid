@@ -10,24 +10,24 @@ import es.ull.pcg.hpc.benchmark.utils.MathUtils;
  * Benchmark results analyzer that calculates the sample standard deviation of a given metric found in the results.
  */
 public class StdDeviationAnalyzer extends MetricReduceAnalyzer {
-    public static final String NAME = "Std Deviation";
+    public static final String TITLE = "Std Deviation";
 
     /**
      * Create a new standard deviation analyzer.
      *
-     * @param metricName Name of the metric for which to calculate the standard deviation.
+     * @param metricTitle Name of the metric for which to calculate the standard deviation.
      */
-    public StdDeviationAnalyzer (String metricName) {
-        super(metricName);
+    public StdDeviationAnalyzer (String metricTitle) {
+        super(metricTitle);
     }
 
     @Override
-    public String getName () {
-        return super.getName() + " " + NAME;
+    public String getTitle () {
+        return super.getTitle() + " " + TITLE;
     }
 
     @Override
     protected Results reduceMetric (ListResult metric) {
-        return new ValueResult(getName(), ResultTypes.Analysis, MathUtils.sampleStdDev(metric));
+        return new ValueResult(getTitle(), ResultTypes.Analysis, MathUtils.sampleStdDev(metric));
     }
 }

@@ -13,16 +13,16 @@ import es.ull.pcg.hpc.benchmark.results.ValueResult;
  * obtained for a given metric during a set of repetitions.
  */
 public abstract class MetricReduceAnalyzer extends ResultsProcessor implements ResultsAnalyzer {
-    private final String mMetricName;
+    private final String mMetricTitle;
     private MapResult mCachedValues;
 
     /**
      * Initialize the analyzer template.
      *
-     * @param metricName Name of the metric to analyze.
+     * @param metricTitle Name of the metric to analyze.
      */
-    protected MetricReduceAnalyzer (String metricName) {
-        this.mMetricName = metricName;
+    protected MetricReduceAnalyzer (String metricTitle) {
+        this.mMetricTitle = metricTitle;
         this.mCachedValues = null;
     }
 
@@ -32,8 +32,8 @@ public abstract class MetricReduceAnalyzer extends ResultsProcessor implements R
     }
 
     @Override
-    public String getName () {
-        return mMetricName;
+    public String getTitle () {
+        return mMetricTitle;
     }
 
     @Override
@@ -53,8 +53,8 @@ public abstract class MetricReduceAnalyzer extends ResultsProcessor implements R
 
     @Override
     public void processList (ListResult list) {
-        if (ResultTypes.Metric == list.getType() && list.getTitle().equals(mMetricName)) {
-            mCachedValues.put(getName(), reduceMetric(list));
+        if (ResultTypes.Metric == list.getType() && list.getTitle().equals(mMetricTitle)) {
+            mCachedValues.put(getTitle(), reduceMetric(list));
         }
         else {
             for (Results result: list)

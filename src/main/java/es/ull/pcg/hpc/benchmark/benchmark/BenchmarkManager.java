@@ -1,4 +1,6 @@
-package es.ull.pcg.hpc.benchmark;
+package es.ull.pcg.hpc.benchmark.benchmark;
+
+import es.ull.pcg.hpc.benchmark.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +9,6 @@ import java.util.List;
  * Manager class able to handle and run several benchmarks, and report aggregated results back.
  */
 public class BenchmarkManager {
-
     private final List<Benchmark> mBenchmarks;
     private final List<Meter> mMeters;
     private final List<ProgressListener> mProgressListeners;
@@ -15,8 +16,6 @@ public class BenchmarkManager {
     private final List<ResultsAnalyzer> mRunAnalyzers;
     private final List<ResultsLogger> mGlobalLoggers;
     private final List<ProgressiveResultsLogger> mOnlineLoggers;
-
-    private final List<Results> mResults;
 
     /**
      * Create and initialize a benchmark manager.
@@ -29,11 +28,10 @@ public class BenchmarkManager {
         this.mRunAnalyzers = new ArrayList<>();
         this.mGlobalLoggers = new ArrayList<>();
         this.mOnlineLoggers = new ArrayList<>();
-        this.mResults = new ArrayList<>();
     }
 
     // TODO Read partial results
-    // TODO Resume benchmarks
+    // TODO Pause/Resume benchmarks
 
     /**
      * Run all contained benchmarks, according to the current configuration of the manager.
@@ -49,43 +47,33 @@ public class BenchmarkManager {
      *     logged by logger added through {@link #addGlobalLogger(ResultsLogger)}.
      * </p>
      */
-    public void runBenchmarks () {
-        mResults.clear();
+    public List<Results> runBenchmarks () {
+        List<Results> results = new ArrayList<>();
 
         int totalBenchmarks = 0;
         for (Benchmark bench: mBenchmarks)
-            totalBenchmarks += bench.getNumImplementations();
-
-        int finalTotalBenchmarks = totalBenchmarks;
+            totalBenchmarks += bench.getNumConfigurations();
 
         for (ProgressListener listener: mProgressListeners)
-            listener.start(finalTotalBenchmarks);
+            listener.start(totalBenchmarks);
 
         for (Benchmark benchmark: mBenchmarks) {
-            benchmark.reset();
+            Results benchmarkResults = benchmark.benchmark();
 
-            for (Meter meter: mMeters)
-                meter.reset();
-
-            for (ProgressiveResultsLogger logger: mOnlineLoggers)
-                logger.startProgressiveLog(benchmark.getName());
-
-            Results results = benchmark.benchmark(mMeters, mProgressListeners, mRunAnalyzers, mOnlineLoggers);
-
-            for (ProgressiveResultsLogger logger: mOnlineLoggers)
-                logger.endProgressiveLog();
-
+            // Process and log complete results
             for (ResultsAnalyzer analyzer: mGlobalAnalyzers)
-                analyzer.analyze(results);
+                analyzer.analyze(benchmarkResults);
 
             for (ResultsLogger logger: mGlobalLoggers)
-                logger.log(results);
+                logger.log(benchmarkResults);
 
-            mResults.add(results);
+            results.add(benchmarkResults);
         }
 
         for (ProgressListener listener: mProgressListeners)
             listener.finish();
+
+        return results;
     }
 
     /**
@@ -98,13 +86,13 @@ public class BenchmarkManager {
     }
 
     /**
-     * Add a new benchmark to run.
+     * Add a new benchmark to run and parent it to the manager.
      *
      * @param benchmark The new benchmark.
      */
     public void addBenchmark (Benchmark benchmark) {
-        if (benchmark != null)
-            mBenchmarks.add(benchmark);
+        benchmark.setParent(this);
+        mBenchmarks.add(benchmark);
     }
 
     /**
@@ -122,8 +110,7 @@ public class BenchmarkManager {
      * @param meter The new meter.
      */
     public void addMeter (Meter meter) {
-        if (meter != null)
-            mMeters.add(meter);
+        mMeters.add(meter);
     }
 
     /**
@@ -138,10 +125,10 @@ public class BenchmarkManager {
     /**
      * Add a new progress listener.
      *
-     * @param listener The new progress listener.
+     * @param progress The new progress listener.
      */
-    public void addProgressListener (ProgressListener listener) {
-        mProgressListeners.add(listener);
+    public void addProgressListener (ProgressListener progress) {
+        mProgressListeners.add(progress);
     }
 
     /**
@@ -159,8 +146,7 @@ public class BenchmarkManager {
      * @param analyzer The new global analyzer.
      */
     public void addGlobalAnalyzer (ResultsAnalyzer analyzer) {
-        if (analyzer != null)
-            mGlobalAnalyzers.add(analyzer);
+        mGlobalAnalyzers.add(analyzer);
     }
 
     /**
@@ -178,8 +164,7 @@ public class BenchmarkManager {
      * @param analyzer The new intermediate analyzer.
      */
     public void addRunAnalyzer (ResultsAnalyzer analyzer) {
-        if (analyzer != null)
-            mRunAnalyzers.add(analyzer);
+        mRunAnalyzers.add(analyzer);
     }
 
     /**
@@ -197,8 +182,7 @@ public class BenchmarkManager {
      * @param logger The new global logger.
      */
     public void addGlobalLogger (ResultsLogger logger) {
-        if (logger != null)
-            mGlobalLoggers.add(logger);
+        mGlobalLoggers.add(logger);
     }
 
     /**
@@ -216,16 +200,6 @@ public class BenchmarkManager {
      * @param logger The new online logger.
      */
     public void addOnlineLogger (ProgressiveResultsLogger logger) {
-        if (logger != null)
-            mOnlineLoggers.add(logger);
-    }
-
-    /**
-     * Obtain the results for the last benchmark execution.
-     *
-     * @return The list of results.
-     */
-    public List<Results> getResults () {
-        return mResults;
+        mOnlineLoggers.add(logger);
     }
 }
