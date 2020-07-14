@@ -11,7 +11,7 @@ import java.util.Collections;
  * Results filtering analyzer that removes the first set of results for each run and metric, which correspond to warm-up
  * iterations.
  */
-public class WarmupIterationsFilter extends MetricReduceProcessor {
+public class WarmUpIterationsFilter extends MetricReduceProcessor {
     public static final String TITLE = "Non-Warmup";
 
     private final int mWarmup;
@@ -20,7 +20,7 @@ public class WarmupIterationsFilter extends MetricReduceProcessor {
      * Create a new filter for warm-up iterations.
      * @param warmup Number of warm-up iterations to filter out.
      */
-    public WarmupIterationsFilter (int warmup) {
+    public WarmUpIterationsFilter (int warmup) {
         super(null);
         this.mWarmup = warmup;
     }
