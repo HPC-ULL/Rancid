@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/javabenchmark.iml" filepath="$PROJECT_DIR$/.idea/modules/javabenchmark.iml" group="javabenchmark" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rancid.iml" filepath="$PROJECT_DIR$/.idea/modules/rancid.iml" />
     </modules>
   </component>
 </project>
