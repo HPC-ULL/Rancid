@@ -93,7 +93,7 @@ public class SimpleTest {
         CompositeAction ifActions = new CompositeAction();
         ifActions.addAction(new PrintAction<Void>(printer, "This is executed before sleep"));
         ifActions.addAction(new SleepAction(1000));
-        ifActions.addAction(new PrintAction<Void>(printer, "This is executed afer sleep"));
+        ifActions.addAction(new PrintAction<Void>(printer, "This is executed after sleep"));
 
         runner.addAction(BenchmarkStage.PRE_BENCHMARK,
                          new ConditionalAction<>(ifActions, runner, new Predicate<BenchmarkRunner>() {

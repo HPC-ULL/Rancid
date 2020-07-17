@@ -46,12 +46,12 @@ public class ErrorWindowStopCondition implements StopCondition {
     @Override
     public void update (MapResult runResults) {
         // Only process if last iteration was successful and there's relevant new data
-        ValueResult success = (ValueResult) runResults.get(SuccessfulRunsMeter.NAME);
+        ValueResult success = (ValueResult) runResults.get(SuccessfulRunsMeter.TITLE);
 
         if (runResults.get(mMetricName) != null && success == null || success.intValue() == 1) {
             // Obtain complete list of results
             ListResult allValues = (ListResult) mParamResults.get(mMetricName);
-            ListResult allSuccess = (ListResult) mParamResults.get(SuccessfulRunsMeter.NAME);
+            ListResult allSuccess = (ListResult) mParamResults.get(SuccessfulRunsMeter.TITLE);
 
             int numResults = allValues.size();
 

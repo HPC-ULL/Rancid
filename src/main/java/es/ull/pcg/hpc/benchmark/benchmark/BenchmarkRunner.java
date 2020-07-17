@@ -88,7 +88,7 @@ public class BenchmarkRunner {
         for (Meter meter: meters)
             paramResults.put(meter.getTitle(), new ListResult(meter.getTitle(), ResultTypes.Metric));
 
-        mStop.reset();
+        mStop.reset(paramResults);
         preBenchmark();
 
         while (!mStop.shouldStop()) {
@@ -117,11 +117,14 @@ public class BenchmarkRunner {
                     break;
             }
 
-            for (Meter meter: meters)
+            MapResult runResults = new MapResult(parameters.getTitle(), ResultTypes.ParameterSet, meterTitles);
+            for (Meter meter: meters) {
+                runResults.put(meter.getTitle(), meter.getMeasure());
                 ((ListResult) paramResults.get(meter.getTitle())).add(meter.getMeasure());
+            }
 
             postRun();
-            mStop.update(paramResults);
+            mStop.update(runResults);
         }
 
         // Online analysis of results
