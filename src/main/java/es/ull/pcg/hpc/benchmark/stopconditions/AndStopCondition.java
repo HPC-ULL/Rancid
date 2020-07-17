@@ -1,9 +1,10 @@
 package es.ull.pcg.hpc.benchmark.stopconditions;
 
 import es.ull.pcg.hpc.benchmark.StopCondition;
+import es.ull.pcg.hpc.benchmark.benchmark.BenchmarkManager;
 
 /**
- * Binary stop condition implementing an AND operation. It tells the {@link es.ull.pcg.hpc.benchmark.BenchmarkManager}
+ * Binary stop condition implementing an AND operation. It tells the {@link BenchmarkManager}
  * that the execution of a benchmark should stop being repeated when both of the contained stop conditions say so.
  */
 public class AndStopCondition extends BinaryStopCondition {

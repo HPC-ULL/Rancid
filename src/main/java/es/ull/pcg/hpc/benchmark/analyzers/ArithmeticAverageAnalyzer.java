@@ -11,7 +11,7 @@ import es.ull.pcg.hpc.benchmark.utils.MathUtils;
  * Benchmark results analyzer that calculates the arithmetic average of a given metric found in the results.
  */
 public class ArithmeticAverageAnalyzer extends MetricReduceProcessor {
-    public static final String NAME = "Arithmetic Avg";
+    public static final String TITLE = "Arithmetic Avg";
 
     /**
      * Create a new arithmeticAvg analyzer.
@@ -23,7 +23,7 @@ public class ArithmeticAverageAnalyzer extends MetricReduceProcessor {
     }
 
     public static String processedMetricTitle (String metricTitle) {
-        return metricTitle + " " + NAME;
+        return metricTitle + " " + TITLE;
     }
 
     @Override

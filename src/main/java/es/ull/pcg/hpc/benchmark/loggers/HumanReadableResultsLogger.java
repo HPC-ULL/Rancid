@@ -31,7 +31,7 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
     @Override
     public void processMap (MapResult map) {
         super.processMap(map);
-        enterMap(map.getTitle(), map.getType().toString());
+        enterMap(map.getTitle(), map.getType());
 
         for (Results value: map.values())
             log(value);
@@ -42,7 +42,7 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
     @Override
     public void processList (ListResult list) {
         super.processList(list);
-        enterList(list.getTitle(), list.getType().toString());
+        enterList(list.getTitle(), list.getType());
 
         if (list.get(0) instanceof ValueResult) {
             logValues(list);
@@ -58,7 +58,7 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
     @Override
     public void processValue (ValueResult value) {
         super.processValue(value);
-        enterValue(value.getTitle(), value.getType().toString());
+        enterValue(value.getTitle(), value.getType());
         logValue(value);
         exitValue();
     }
@@ -66,7 +66,7 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
     @Override
     public void startProgressiveLog (String title) {
         resetIndentation();
-        enterMap(title, ResultTypes.MultiBenchmark.toString());
+        enterMap(title, ResultTypes.MultiBenchmark);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
     }
 
     @Override
-    public void enterMap (String title, String type) {
+    public void enterMap (String title, ResultTypes type) {
         writeIndentation();
         mOut.println(type + ": \"" + title + "\"");
         indent();
@@ -88,7 +88,7 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
     }
 
     @Override
-    public void enterList (String title, String type) {
+    public void enterList (String title, ResultTypes type) {
         writeIndentation();
         mOut.println(type + ": \"" + title + "\": [");
         indent();
@@ -102,7 +102,7 @@ public class HumanReadableResultsLogger extends IndentedResultsLogger implements
     }
 
     @Override
-    public void enterValue (String title, String type) {
+    public void enterValue (String title, ResultTypes type) {
         writeIndentation();
         mOut.print(type + ": \"" + title + "\": ");
     }

@@ -11,8 +11,8 @@ import es.ull.pcg.hpc.benchmark.utils.MathUtils;
  * Benchmark results analyzer that calculates a histogram for a given metric found in the results.
  */
 public class HistogramAnalyzer extends MetricReduceProcessor {
-    public static final String NAME = "Histogram";
-    public static final String BIN_NAME = "Bin";
+    public static final String TITLE = "Histogram";
+    public static final String BIN_TITLE = "Bin";
 
     protected Number mCurrentMax, mCurrentMin;
     private final int mBins;
@@ -20,25 +20,25 @@ public class HistogramAnalyzer extends MetricReduceProcessor {
     /**
      * Create a new histogram analyzer.
      *
-     * @param metricName Name of the metric for which to calculate the histogram.
+     * @param metricTitle Name of the metric for which to calculate the histogram.
      * @param bins Number of bins to use when constructing the histogram.
      */
-    public HistogramAnalyzer (String metricName, int bins) {
-        super(metricName);
+    public HistogramAnalyzer (String metricTitle, int bins) {
+        super(metricTitle);
         this.mBins = bins;
     }
 
     /**
      * Create a new histogram analyzer, using an automatically-calculated number of bins.
      *
-     * @param metricName Name of the metric for which to calculate the histogram.
+     * @param metricTitle Name of the metric for which to calculate the histogram.
      */
-    public HistogramAnalyzer (String metricName) {
-        this(metricName, 0);
+    public HistogramAnalyzer (String metricTitle) {
+        this(metricTitle, 0);
     }
 
     public static String processedMetricTitle (String metricTitle) {
-        return metricTitle + " " + NAME;
+        return metricTitle + " " + TITLE;
     }
 
     /**
@@ -70,7 +70,7 @@ public class HistogramAnalyzer extends MetricReduceProcessor {
         ListResult result = new ListResult(processedMetricTitle(), ResultTypes.Analysis);
 
         for (int bin: histogram)
-            result.add(new ValueResult(BIN_NAME, bin));
+            result.add(new ValueResult(BIN_TITLE, bin));
 
         return result;
     }

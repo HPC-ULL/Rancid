@@ -23,23 +23,23 @@ public class Parameters {
     /**
      * Add a new parameter to the set.
      *
-     * @param name Name of the parameter.
+     * @param title Name of the parameter.
      * @param value Value of the parameter.
      */
-    public void addParameter (String name, Object value) {
-        mValues.put(name, value);
+    public void addParameter (String title, Object value) {
+        mValues.put(title, value);
     }
 
     /**
      * Retrieve a parameter from the set.
      *
-     * @param name Name of the parameter.
+     * @param title Name of the parameter.
      * @param <T> Data type of the parameter.
      *
      * @return The desired parameter or {@code null} if it does not exist.
      */
-    public <T> T getParameter (String name) {
-        Object value = mValues.get(name);
+    public <T> T getParameter (String title) {
+        Object value = mValues.get(title);
         return (T) value;
     }
 

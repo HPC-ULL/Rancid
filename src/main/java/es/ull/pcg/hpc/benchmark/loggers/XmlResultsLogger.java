@@ -30,12 +30,12 @@ public class XmlResultsLogger extends IndentedResultsLogger {
         super.processMap(map);
 
         writeIndentation();
-        mOut.println("<node type=\"" + map.getType().toString() + "\">");
+        mOut.println("<node type=\"" + map.getType() + "\">");
 
         indent();
 
         writeIndentation();
-        mOut.println("<name>" + map.getTitle() + "</name>");
+        mOut.println("<title>" + map.getTitle() + "</title>");
         writeIndentation();
         mOut.println("<values>");
 
@@ -44,12 +44,12 @@ public class XmlResultsLogger extends IndentedResultsLogger {
         for (Results result: map.values()) {
             if (result instanceof ValueResult) {
                 writeIndentation();
-                mOut.println("<node type=\"" + result.getType().toString() + "\">");
+                mOut.println("<node type=\"" + result.getType() + "\">");
 
                 indent();
 
                 writeIndentation();
-                mOut.println("<name>" + result.getTitle() + "</name>");
+                mOut.println("<title>" + result + "</title>");
                 writeIndentation();
                 mOut.print("<value>");
                 process(result);
@@ -83,12 +83,12 @@ public class XmlResultsLogger extends IndentedResultsLogger {
         super.processList(list);
 
         writeIndentation();
-        mOut.println("<node type=\"" + list.getType().toString() + "\">");
+        mOut.println("<node type=\"" + list.getType() + "\">");
 
         indent();
 
         writeIndentation();
-        mOut.println("<name>" + list.getTitle() + "</name>");
+        mOut.println("<title>" + list.getTitle() + "</title>");
         writeIndentation();
         mOut.println("<values>");
 

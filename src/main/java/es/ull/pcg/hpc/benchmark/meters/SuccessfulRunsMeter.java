@@ -7,7 +7,7 @@ import es.ull.pcg.hpc.benchmark.results.ValueResult;
  * Meter that measures {@code 1} or {@code 0} depending on if a benchmark executed successfully or not.
  */
 public class SuccessfulRunsMeter implements Meter {
-    public static final String NAME = "Successful Runs";
+    public static final String TITLE = "Successful Runs";
 
     private boolean mRunSuccess;
 
@@ -28,12 +28,12 @@ public class SuccessfulRunsMeter implements Meter {
     public void reset () {}
 
     @Override
-    public String getName () {
-        return NAME;
+    public String getTitle () {
+        return TITLE;
     }
 
     @Override
     public ValueResult getMeasure () {
-        return new ValueResult(getName(), mRunSuccess? 1 : 0);
+        return new ValueResult(getTitle(), mRunSuccess? 1 : 0);
     }
 }

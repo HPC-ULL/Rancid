@@ -1,6 +1,7 @@
 package es.ull.pcg.hpc.benchmark;
 
 import es.ull.pcg.hpc.benchmark.results.ListResult;
+import es.ull.pcg.hpc.benchmark.results.ResultTypes;
 import es.ull.pcg.hpc.benchmark.results.ValueResult;
 
 /**
@@ -31,12 +32,12 @@ public interface ProgressiveResultsLogger {
      *
      * @see #exitMap()
      */
-    void enterMap (String title, String type);
+    void enterMap (String title, ResultTypes type);
 
     /**
      * End logging of a partial results map.
      *
-     * @see #enterMap(String, String)
+     * @see #enterMap(String, ResultTypes)
      */
     void exitMap ();
 
@@ -48,12 +49,12 @@ public interface ProgressiveResultsLogger {
      *
      * @see #exitList()
      */
-    void enterList (String title, String type);
+    void enterList (String title, ResultTypes type);
 
     /**
      * End logging of a partial results list.
      *
-     * @see #enterList(String, String)
+     * @see #enterList(String, ResultTypes)
      */
     void exitList ();
 
@@ -63,7 +64,7 @@ public interface ProgressiveResultsLogger {
      * @param title Name of the partial result value.
      * @param type Type or category of the result.
      */
-    void enterValue (String title, String type);
+    void enterValue (String title, ResultTypes type);
 
     /**
      * End logging of a partial result value.

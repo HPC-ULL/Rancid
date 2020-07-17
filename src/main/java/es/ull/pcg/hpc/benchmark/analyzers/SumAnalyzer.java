@@ -11,19 +11,19 @@ import es.ull.pcg.hpc.benchmark.utils.MathUtils;
  * Benchmark results analyzer that sums the values of a given metric found in the results.
  */
 public class SumAnalyzer extends MetricReduceProcessor {
-    public static final String NAME = "Total";
+    public static final String TITLE = "Total";
 
     /**
      * Create a new sum analyzer.
      *
-     * @param metricName Name of the metric for which to calculate the sum.
+     * @param metricTitle Name of the metric for which to calculate the sum.
      */
-    public SumAnalyzer (String metricName) {
-        super(metricName);
+    public SumAnalyzer (String metricTitle) {
+        super(metricTitle);
     }
 
     public static String processedMetricTitle (String metricTitle) {
-        return metricTitle + " " + NAME;
+        return metricTitle + " " + TITLE;
     }
 
     @Override

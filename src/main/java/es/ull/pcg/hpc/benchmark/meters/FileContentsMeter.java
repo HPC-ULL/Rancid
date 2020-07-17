@@ -40,13 +40,13 @@ public class FileContentsMeter implements Meter {
     public void reset () {}
 
     @Override
-    public String getName () {
+    public String getTitle () {
         return mMeterName;
     }
 
     @Override
     public ValueResult getMeasure () {
-        return new ValueResult(getName(), ResultTypes.Value, mValue);
+        return new ValueResult(getTitle(), ResultTypes.Value, mValue);
     }
 
     protected Number errorValue () {

@@ -14,7 +14,7 @@ import java.util.Iterator;
  * Benchmark results analyzer that filters out invalid results.
  */
 public class InvalidRunsRemover extends ResultsProcessor {
-    public static final String NAME = "Valid";
+    public static final String TITLE = "Valid";
 
     private ListResult mInvalid;
 
@@ -23,7 +23,7 @@ public class InvalidRunsRemover extends ResultsProcessor {
     }
 
     public static String processedMetricTitle (String metricTitle) {
-        return NAME + " " + metricTitle;
+        return TITLE + " " + metricTitle;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class InvalidRunsRemover extends ResultsProcessor {
                 break;
         }
 
-        // Apply filter to all metrics and remove successful runs
+        // Apply filter to all metrics and remove unsuccessful runs
         if (mInvalid != null) {
             for (Results value: map.values())
                 process(value);
@@ -69,7 +69,7 @@ public class InvalidRunsRemover extends ResultsProcessor {
         }
         else {
             if (list.getType() == ResultTypes.Metric &&
-                list.getTitle().equals(SuccessfulRunsMeter.NAME)) {
+                list.getTitle().equals(SuccessfulRunsMeter.TITLE)) {
                 mInvalid = list;
             }
             else {

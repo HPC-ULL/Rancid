@@ -11,19 +11,19 @@ import es.ull.pcg.hpc.benchmark.utils.MathUtils;
  * Benchmark results analyzer that calculates the sample standard deviation of a given metric found in the results.
  */
 public class StdDeviationAnalyzer extends MetricReduceProcessor {
-    public static final String NAME = "Std Dev";
+    public static final String TITLE = "Std Dev";
 
     /**
      * Create a new standard deviation analyzer.
      *
-     * @param metricName Name of the metric for which to calculate the standard deviation.
+     * @param metricTitle Name of the metric for which to calculate the standard deviation.
      */
-    public StdDeviationAnalyzer (String metricName) {
-        super(metricName);
+    public StdDeviationAnalyzer (String metricTitle) {
+        super(metricTitle);
     }
 
     public static String processedMetricTitle (String metricTitle) {
-        return metricTitle + " " + NAME;
+        return metricTitle + " " + TITLE;
     }
 
     @Override

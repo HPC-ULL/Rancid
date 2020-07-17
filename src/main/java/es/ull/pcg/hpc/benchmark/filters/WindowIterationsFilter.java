@@ -10,7 +10,7 @@ import es.ull.pcg.hpc.benchmark.results.ResultTypes;
  * iterations that fall within the specified window.
  */
 public class WindowIterationsFilter extends MetricReduceProcessor {
-    public static final String NAME = "Window";
+    public static final String TITLE = "Window";
 
     private final int mWindow;
 
@@ -24,7 +24,7 @@ public class WindowIterationsFilter extends MetricReduceProcessor {
     }
 
     public static String processedMetricTitle (String metricTitle) {
-        return NAME + " " + metricTitle;
+        return TITLE + " " + metricTitle;
     }
 
     @Override

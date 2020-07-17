@@ -36,9 +36,9 @@ public class JsonResultsLogger extends IndentedResultsLogger {
         indent();
 
         writeIndentation();
-        mOut.println("\"Name\": \"" + map.getTitle() + "\",");
+        mOut.println("\"Title\": \"" + map.getTitle() + "\",");
         writeIndentation();
-        mOut.println("\"Type\": \"" + map.getType().toString() + "\",");
+        mOut.println("\"Type\": \"" + map.getType() + "\",");
         writeIndentation();
         mOut.println("\"Values\": [");
 
@@ -79,9 +79,9 @@ public class JsonResultsLogger extends IndentedResultsLogger {
         indent();
 
         writeIndentation();
-        mOut.println("\"Name\": \"" + list.getTitle() + "\",");
+        mOut.println("\"Title\": \"" + list.getTitle() + "\",");
         writeIndentation();
-        mOut.println("\"Type\": \"" + list.getType().toString() + "\",");
+        mOut.println("\"Type\": \"" + list.getType() + "\",");
         writeIndentation();
         mOut.println("\"Values\": [");
 
@@ -127,9 +127,9 @@ public class JsonResultsLogger extends IndentedResultsLogger {
         indent();
 
         writeIndentation();
-        mOut.println("\"Name\": \"" + value.getTitle() + "\",");
+        mOut.println("\"Title\": \"" + value.getTitle() + "\",");
         writeIndentation();
-        mOut.println("\"Type\": \"" + value.getType().toString() + "\",");
+        mOut.println("\"Type\": \"" + value.getType() + "\",");
         writeIndentation();
         mOut.println("\"Value\": " + value);
 

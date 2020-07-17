@@ -11,19 +11,19 @@ import es.ull.pcg.hpc.benchmark.utils.MathUtils;
  * Benchmark results analyzer that calculates the max of a given metric found in the results.
  */
 public class MaxAnalyzer extends MetricReduceProcessor {
-    public static final String NAME = "Max";
+    public static final String TITLE = "Max";
 
     /**
      * Create a new max analyzer.
      *
-     * @param metricName Name of the metric for which to calculate the maximum.
+     * @param metricTitle Name of the metric for which to calculate the maximum.
      */
-    public MaxAnalyzer (String metricName) {
-        super(metricName);
+    public MaxAnalyzer (String metricTitle) {
+        super(metricTitle);
     }
 
     public static String processedMetricTitle (String metricTitle) {
-        return metricTitle + " " + NAME;
+        return metricTitle + " " + TITLE;
     }
 
     @Override

@@ -10,43 +10,43 @@ import es.ull.pcg.hpc.benchmark.results.ValueResult;
  * obtained for a given metric during a set of repetitions.
  */
 public abstract class MetricReduceProcessor extends ResultsProcessor {
-    private final String mMetricName;
-    private MapResult mAddedNodes;
+    private final String mMetricTitle;
+    private MapResult mCachedValues;
 
     /**
      * Initialize the analyzer template.
      *
-     * @param metricName Name of the metric to analyze.
+     * @param metricTitle Name of the metric to analyze.
      */
-    protected MetricReduceProcessor (String metricName) {
-        this.mMetricName = metricName;
-        this.mAddedNodes = null;
+    protected MetricReduceProcessor (String metricTitle) {
+        this.mMetricTitle = metricTitle;
+        this.mCachedValues = null;
     }
 
     @Override
     public void processMap (MapResult map) {
         super.processMap(map);
 
-        MapResult prevNodes = mAddedNodes;
-        mAddedNodes = MapResult.createTemp();
+        MapResult prevNodes = mCachedValues;
+        mCachedValues = MapResult.createTemp();
 
         for (Results result: map.values())
             process(result);
 
-        map.putAll(mAddedNodes);
-        mAddedNodes.clear();
-        mAddedNodes = prevNodes;
+        map.putAll(mCachedValues);
+        mCachedValues.clear();
+        mCachedValues = prevNodes;
     }
 
     @Override
     public void processList (ListResult list) {
         super.processList(list);
 
-        if (ResultTypes.Metric == list.getType() && (mMetricName == null || list.getTitle().equals(mMetricName))) {
+        if (ResultTypes.Metric == list.getType() && (mMetricTitle == null || list.getTitle().equals(mMetricTitle))) {
             Results reduced = reduceMetric(list);
 
             if (reduced != null)
-                mAddedNodes.put(processedMetricTitle(), reduced);
+                mCachedValues.put(processedMetricTitle(), reduced);
         }
         else {
             for (Results result: list)
