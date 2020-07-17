@@ -2,6 +2,7 @@ package es.ull.pcg.hpc.benchmark.stopconditions;
 
 import es.ull.pcg.hpc.benchmark.Results;
 import es.ull.pcg.hpc.benchmark.StopCondition;
+import es.ull.pcg.hpc.benchmark.results.MapResult;
 
 /**
  * Inverts the value of another stop condition, implementing a NOT operation.
@@ -24,14 +25,14 @@ public class NegateStopCondition implements StopCondition {
     }
 
     @Override
-    public void update (Results results) {
+    public void update (MapResult runResults) {
         if (mStop != null)
-            mStop.update(results);
+            mStop.update(runResults);
     }
 
     @Override
-    public void reset () {
+    public void reset (MapResult paramResults) {
         if (mStop != null)
-            mStop.reset();
+            mStop.reset(paramResults);
     }
 }

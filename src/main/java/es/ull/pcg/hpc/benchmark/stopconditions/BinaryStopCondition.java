@@ -2,6 +2,7 @@ package es.ull.pcg.hpc.benchmark.stopconditions;
 
 import es.ull.pcg.hpc.benchmark.Results;
 import es.ull.pcg.hpc.benchmark.StopCondition;
+import es.ull.pcg.hpc.benchmark.results.MapResult;
 
 /**
  * Stop condition composed by two contained stop conditions, whose decisions are merged in order to obtain a single
@@ -42,20 +43,20 @@ public abstract class BinaryStopCondition implements StopCondition {
     }
 
     @Override
-    public void update (Results results) {
+    public void update (MapResult runResults) {
         if (mConditionA != null)
-            mConditionA.update(results);
+            mConditionA.update(runResults);
 
         if (mConditionB != null)
-            mConditionB.update(results);
+            mConditionB.update(runResults);
     }
 
     @Override
-    public void reset () {
+    public void reset (MapResult paramResults) {
         if (mConditionA != null)
-            mConditionA.reset();
+            mConditionA.reset(paramResults);
 
         if (mConditionB != null)
-            mConditionB.reset();
+            mConditionB.reset(paramResults);
     }
 }

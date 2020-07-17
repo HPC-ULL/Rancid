@@ -1,5 +1,7 @@
 package es.ull.pcg.hpc.benchmark;
 
+import es.ull.pcg.hpc.benchmark.results.MapResult;
+
 /**
  * Interface for classes representing stop conditions, or logic for deciding whether to keep running a certain benchmark
  * or stop.
@@ -19,12 +21,15 @@ public interface StopCondition {
     /**
      * Provide information after each benchmark run, in order to help decide if it should keep being repeated.
      *
-     * @param results Partial results obtained up to the current point.
+     * @param runResults Results obtained on the latest iteration.
      */
-    void update (Results results);
+    void update (MapResult runResults);
 
     /**
      * Put the stop condition in its initial state. Called before running each benchmark.
+     *
+     * @param paramResults Object that always contains the current results, updated after each run. Each element
+     *                     contains the list of results for a metric.
      */
-    void reset ();
+    void reset (MapResult paramResults);
 }

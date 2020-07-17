@@ -41,39 +41,50 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
     @Override
     public Results benchmark (List<Meter> meters, List<ProgressListener> progress, List<ResultsProcessor> processors,
                               List<ProgressiveResultsLogger> loggers) {
+        // Obtain meter names
         ArrayList<String> meterNames = new ArrayList<>(meters.size());
 
         for (Meter meter: meters)
             meterNames.add(meter.getName());
 
+        // Obtain parameter names
         ArrayList<String> paramNames = new ArrayList<>(mParameters.size());
 
         for (Parameters param: mParameters)
             paramNames.add(param.getTitle());
 
+        // Create results object
         MapResult results = new MapResult(this.getName(), ResultTypes.Benchmark, paramNames);
 
+        // Notify benchmark start to progress listeners and online loggers
         for (ProgressListener listener: progress)
             listener.startBenchmark(this.getName(), mParameters.size());
 
         for (ProgressiveResultsLogger logger: loggers)
             logger.enterMap(this.getName(), ResultTypes.Benchmark.toString());
 
+        // Run benchmarks for each parameter set
         for (Parameters parameters: mParameters) {
+            // Notify benchmark start for a set of parameters to progress listeners and online loggers
             for (ProgressListener listener: progress)
                 listener.startParameters(parameters.getTitle());
 
             for (ProgressiveResultsLogger logger: loggers)
                 logger.enterMap(parameters.getTitle(), ResultTypes.ParameterSet.toString());
 
+            // Create results object for the current set of parameters
             MapResult paramResults = new MapResult(parameters.getTitle(), ResultTypes.ParameterSet, meterNames);
 
             for (Meter meter: meters)
                 paramResults.put(meter.getName(), new ListResult(meter.getName(), ResultTypes.Metric));
 
+            // Setup to start running benchmarks
+            mStop.reset(paramResults);
             preBenchmark(parameters);
 
+            // Keep running the same benchmark until the stop condition is reached
             while (!mStop.shouldStop()) {
+                // Setup before each iteration
                 ListIterator<Meter> reverseIterator = meters.listIterator(meters.size());
                 preRun();
 
@@ -84,11 +95,11 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
 
                     benchmark();
 
+                    // End measuring
                     while (reverseIterator.hasPrevious()) {
                         Meter meter = reverseIterator.previous();
                         meter.stop();
                     }
-                    // End measuring
                 } catch (Exception exception) {
                     while (reverseIterator.hasPrevious()) {
                         Meter meter = reverseIterator.previous();
@@ -99,18 +110,24 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
                         break;
                 }
 
-                for (Meter meter: meters)
-                    ((ListResult) paramResults.get(meter.getName())).add(meter.getMeasure());
+                // Obtain the results of the run
+                MapResult runResults = MapResult.createTemp();
 
+                for (Meter meter: meters)
+                    runResults.put(meter.getName(), meter.getMeasure());
+
+                paramResults.merge(runResults);
+
+                // Tear-down after each iteration and stop condition update
                 postRun();
-                mStop.update(paramResults);
+                mStop.update(runResults);
             }
 
             // Online analysis of results
             for (ResultsProcessor processor: processors)
                 processor.process(paramResults);
 
-            // Logging of results for the current set of parameters
+            // Notify benchmark finish for a parameter set to progress listeners and online loggers
             for (Map.Entry<String, Results> entry: paramResults.entrySet()) {
                 Results result = entry.getValue();
 
@@ -139,9 +156,9 @@ public abstract class SimpleBenchmark extends GenericBenchmark {
             // Update global results
             results.put(parameters.getTitle(), paramResults);
             postBenchmark();
-
         }
 
+        // Notify benchmark finish to progress listeners and online loggers
         for (ProgressListener listener: progress)
             listener.finishBenchmark();
 

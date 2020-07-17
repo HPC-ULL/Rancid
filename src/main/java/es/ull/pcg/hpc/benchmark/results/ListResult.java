@@ -51,4 +51,12 @@ public class ListResult extends ArrayList<Results> implements Results {
     public <T extends ResultsProcessor> void accept (T processor) {
         processor.processList(this);
     }
+
+    @Override
+    public void merge (Results other) {
+        if (other instanceof ListResult)
+            addAll((ListResult) other);
+        else
+            add(other);
+    }
 }

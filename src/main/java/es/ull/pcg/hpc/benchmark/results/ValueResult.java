@@ -2,6 +2,7 @@ package es.ull.pcg.hpc.benchmark.results;
 
 import es.ull.pcg.hpc.benchmark.Results;
 import es.ull.pcg.hpc.benchmark.ResultsProcessor;
+import es.ull.pcg.hpc.benchmark.exceptions.InvalidResultsMergeException;
 
 /**
  * A numeric benchmark result.
@@ -9,7 +10,7 @@ import es.ull.pcg.hpc.benchmark.ResultsProcessor;
 public class ValueResult extends Number implements Results {
     private final String mTitle;
     private final ResultTypes mType;
-    private final Number mValue;
+    private Number mValue;
 
     /**
      * Create a new numeric result.
@@ -72,5 +73,13 @@ public class ValueResult extends Number implements Results {
     @Override
     public <T extends ResultsProcessor> void accept (T processor) {
         processor.processValue(this);
+    }
+
+    @Override
+    public void merge (Results other) {
+        if (!(other instanceof ValueResult))
+            throw new InvalidResultsMergeException("Cannot merge Value with List or Map results");
+
+        this.mValue = ((ValueResult) other).mValue;
     }
 }

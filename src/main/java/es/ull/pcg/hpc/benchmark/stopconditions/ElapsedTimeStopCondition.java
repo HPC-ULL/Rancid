@@ -2,6 +2,7 @@ package es.ull.pcg.hpc.benchmark.stopconditions;
 
 import es.ull.pcg.hpc.benchmark.Results;
 import es.ull.pcg.hpc.benchmark.StopCondition;
+import es.ull.pcg.hpc.benchmark.results.MapResult;
 
 /**
  * Time-based stop condition. Each benchmark runs until the time budget assigned expires. Execution is not interrupted
@@ -26,10 +27,10 @@ public class ElapsedTimeStopCondition implements StopCondition {
     }
 
     @Override
-    public void update (Results results) {}
+    public void update (MapResult runResults) {}
 
     @Override
-    public void reset () {
+    public void reset (MapResult paramResults) {
         mStartTime = System.currentTimeMillis();
     }
 }

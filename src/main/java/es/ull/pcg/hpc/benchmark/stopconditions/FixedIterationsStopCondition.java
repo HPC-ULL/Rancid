@@ -2,6 +2,7 @@ package es.ull.pcg.hpc.benchmark.stopconditions;
 
 import es.ull.pcg.hpc.benchmark.Results;
 import es.ull.pcg.hpc.benchmark.StopCondition;
+import es.ull.pcg.hpc.benchmark.results.MapResult;
 
 /**
  * Iteration-based stop condition. Benchmarks are repeated a fixed amount of times.
@@ -25,12 +26,12 @@ public class FixedIterationsStopCondition implements StopCondition {
     }
 
     @Override
-    public void update (Results results) {
+    public void update (MapResult runResults) {
         ++mCurrentIterations;
     }
 
     @Override
-    public void reset () {
+    public void reset (MapResult paramResults) {
         mCurrentIterations = 0;
     }
 }

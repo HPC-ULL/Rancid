@@ -49,9 +49,7 @@ public abstract class GenericBenchmark implements Benchmark {
     }
 
     @Override
-    public void preBenchmark (Parameters parameters) {
-        mStop.reset();
-    }
+    public void preBenchmark (Parameters parameters) {}
 
     @Override
     public void postBenchmark () {}

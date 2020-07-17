@@ -28,4 +28,12 @@ public interface Results {
      * @param <T> Type of {@link ResultsProcessor}.
      */
     <T extends ResultsProcessor> void accept (T processor);
+
+    /**
+     * Merge this results with another set of results, possibly resulting on a bigger set of results or modifications
+     * to this results.
+     *
+     * @param other The other set of results with which to merge this results.
+     */
+    void merge (Results other);
 }

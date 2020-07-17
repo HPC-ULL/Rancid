@@ -2,8 +2,10 @@ package es.ull.pcg.hpc.benchmark.results;
 
 import es.ull.pcg.hpc.benchmark.Results;
 import es.ull.pcg.hpc.benchmark.ResultsProcessor;
+import es.ull.pcg.hpc.benchmark.exceptions.InvalidResultsMergeException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -58,5 +60,26 @@ public class MapResult extends TreeMap<String, Results> implements Results {
     @Override
     public <T extends ResultsProcessor> void accept (T processor) {
         processor.processMap(this);
+    }
+
+    @Override
+    public void merge (Results other) {
+        if (!(other instanceof MapResult))
+            throw new InvalidResultsMergeException("Cannot merge Map with List or Value results");
+
+        // Add new elements and merge the existing ones
+        for (Map.Entry<String, Results> kv: ((MapResult) other).entrySet()) {
+            String key = kv.getKey();
+            Results value = kv.getValue();
+
+            Results result = get(key);
+
+            if (result == null)
+                result = value;
+            else
+                result.merge(value);
+
+            put(key, result);
+        }
     }
 }
