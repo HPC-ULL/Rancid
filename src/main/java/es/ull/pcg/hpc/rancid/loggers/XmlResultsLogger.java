@@ -21,7 +21,21 @@ public class XmlResultsLogger extends IndentedResultsLogger {
 
     @Override
     public void log (Results results) {
+        writeIndentation();
+        mOut.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        writeIndentation();
+        mOut.println("<rancid>");
+
+        indent();
+
         process(results);
+
+        unindent();
+
+        mOut.println();
+        writeIndentation();
+        mOut.println("</rancid>");
+
         mOut.flush();
     }
 
@@ -49,7 +63,7 @@ public class XmlResultsLogger extends IndentedResultsLogger {
                 indent();
 
                 writeIndentation();
-                mOut.println("<title>" + result + "</title>");
+                mOut.println("<title>" + result.getTitle() + "</title>");
                 writeIndentation();
                 mOut.print("<value>");
                 process(result);

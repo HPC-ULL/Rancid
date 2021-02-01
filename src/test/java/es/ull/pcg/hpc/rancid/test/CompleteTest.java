@@ -11,7 +11,7 @@ import es.ull.pcg.hpc.rancid.benchmark.actions.PrintAction;
 import es.ull.pcg.hpc.rancid.benchmark.actions.SleepAction;
 import es.ull.pcg.hpc.rancid.filters.WindowIterationsFilter;
 import es.ull.pcg.hpc.rancid.loggers.HumanReadableResultsLogger;
-import es.ull.pcg.hpc.rancid.loggers.JsonResultsLogger;
+import es.ull.pcg.hpc.rancid.loggers.XmlResultsLogger;
 import es.ull.pcg.hpc.rancid.meters.ExecutionTimeMeter;
 import es.ull.pcg.hpc.rancid.meters.SuccessfulRunsMeter;
 import es.ull.pcg.hpc.rancid.printers.PrintStreamOutputPrinter;
@@ -110,7 +110,7 @@ public class CompleteTest {
 
         // Loggers
         mgr.addOnlineLogger(new HumanReadableResultsLogger(printer));
-        mgr.addGlobalLogger(new JsonResultsLogger(printer));
+        mgr.addGlobalLogger(new XmlResultsLogger(printer));
 
         //mgr.addProgressListener(new RelativeProgressListener() {
         //    @Override
